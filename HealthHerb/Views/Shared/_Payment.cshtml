@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+}
+
+<div>
+    <form action="/Payment/Processing" method="POST">
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="pk_test_YourPublishAbleKey"
+                data-amount="@ViewBag.PaymentAmount"
+                data-name="[My Company Name]"
+                data-description="10 rubberducks for 1$ each"
+                data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                data-locale="en"
+                data-zip-code="true"
+                data-label="Pay 10$">
+        </script>
+    </form>
+</div>
