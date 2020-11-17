@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Cart>
+@{
+    ViewData["Title"] = "Cart list";
+}
+
+<section id="cart_items">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li><a href="#">Home</a></li>
+                <li class="active">Shopping Cart</li>
+            </ol>
+        </div>
+        <div class="table-responsive cart_info">
+            <table class="table table-condensed">
+                <thead>
+                    <tr class="cart_menu">
+                        <td class="image">Item</td>
+                        <td class="description"></td>
+                        <td class="price">Price</td>
+                        <td class="quantity">Quantity</td>
+                        <td class="total">Total</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                @foreach (var record in Model)
+                {
+                    <tbody>
+                        <tr>
+                            <td class="cart_product">
+                                <a href=""><img src="/uploads/@record.Product.Image" class="img-fluid" style="max-width:120px" ></a>
+                            </td>
+                            <td class="cart_description">
+                                <h4><strong>Name: </strong>@record.Product.Name</h4>
+                                <p><strong>Description: </strong>@record.Product.Description</p>
+                            </td>
+                            <td class="cart_price">
+                                @if (record.Product.Discount == 0)
+                                {
+                                    <p>@record.Product.Price</p>
+                                }
+                                else
+                                {
+                                    <del><p>@record.Product.Price</p></del>
+                                    <p>@(record.Product.Price-record.Product.Discount)</p>
+                                }
+                            </td>
+                            <td class="cart_quantity">
+                                <div class="cart_quantity_button">
+                                    <a class="cart_quantity_up" href="/cart/increaseitem/@record.Id"> + </a>
+                                    <input class="cart_quantity_input" asp-for="@record.Quantity" disabled>
+                                    <a class="cart_quantity_down" href="/cart/decreaseitem/@record.Id" > - </a>
+                                </div>
+                            </td>
+                            <td class="cart_total">
+                                <p class="cart_total_price">@(record.Quantity*(record.Product.Price - record.Product.Discount))</p>
+                            </td>
+                            <td class="cart_delete">
+                                <a class="cart_quantity_delete" onclick="location.href('cart/delete/@record.Id')"><i class="fa fa-times"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+
+            </table>
+        </div>
+    </div>
+</section> <!--/#cart_items-->

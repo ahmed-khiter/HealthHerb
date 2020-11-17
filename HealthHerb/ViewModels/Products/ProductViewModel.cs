@@ -22,16 +22,11 @@ namespace HealthHerb.ViewModels.Products
         [Required]
         public int Quantity { get; set; }
 
-        public decimal Discount { get; set; }
+        public decimal Discount { get; set; } = 0;
 
-        public List<ImageViewModel> CurrentImages { get; set; }
+        public string CurrentImage { get; set; }
 
-        [Display(Name = "Sort collection of image")]
-        public List<IFormFile> Images { get; set; }
-
-        public ProductViewModel()
-        {
-            CurrentImages = new List<ImageViewModel>();
-        }
+        [Display(Name = "Product image")]
+        public IFormFile Image { get; set; }
     }
 }

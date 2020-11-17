@@ -19,7 +19,7 @@ namespace HealthHerb.ViewModels.Accounts
 
         [Required]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        public string Email { get; set;     }
 
         [Required]
         [DataType(DataType.Password)]

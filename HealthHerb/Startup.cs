@@ -54,7 +54,7 @@ namespace HealthHerb
             // Authorization
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(Policy.PowerAdmin, Policy.PowerAdminPolicy());
+                options.AddPolicy(Policy.Admin, Policy.AdminPolicy());
             });
 
             // Dependency Injection

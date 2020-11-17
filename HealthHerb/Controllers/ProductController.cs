@@ -2,44 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HealthHerb.Authorization;
 using HealthHerb.Help;
 using HealthHerb.Interface;
 using HealthHerb.Models.Product;
 using HealthHerb.ViewModels.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthHerb.Controllers
 {
+    //[Authorize(Roles =Role.Admin)]
+    [AllowAnonymous]
     public class ProductController : Controller
     {
         private readonly FileManager fileManager;
         private readonly ICrud<Product> crud;
-        private readonly ICrud<Image> imageCrud;
 
         public ProductController
         (
             FileManager fileManager,
-            ICrud<Product> crud,
-            ICrud<Image> imageCrud
+            ICrud<Product> crud
         )
         {
             this.fileManager = fileManager;
             this.crud = crud;
-            this.imageCrud = imageCrud;
         }
 
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var model = await crud.GetAll(new string[] { "Images" });
+            var model = await crud.GetAll();
             return View(model);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new ProductViewModel());
         }
 
         [HttpPost]
@@ -47,7 +48,7 @@ namespace HealthHerb.Controllers
         {
             if (!ModelState.IsValid)
             {
-                RedirectToAction(nameof(Create));
+                return View(nameof(Create));
             }
 
             var record = new Product
@@ -57,11 +58,10 @@ namespace HealthHerb.Controllers
                 Price = model.Price,
                 Discount = model.Discount,
                 Quantity = model.Quantity, 
+                Image = fileManager.Upload(model.Image),
             };
 
             await crud.Add(record);
-
-            await CreateImage(record.Id, model.Images);
 
             TempData["Success"] = "Success operation";
 
@@ -72,7 +72,6 @@ namespace HealthHerb.Controllers
         public async Task<IActionResult> Edit(string Id)
         {
             var record = await crud.GetById(Id);
-            var images = await imageCrud.GetAll(img => img.ProductId.Equals(Id));
 
             var model = new ProductViewModel()
             {
@@ -81,17 +80,9 @@ namespace HealthHerb.Controllers
                 Description = record.Description,
                 Price = record.Price,
                 Discount = record.Discount,
-                Quantity = record.Quantity
+                Quantity = record.Quantity,
+                CurrentImage = record.Image
             };
-
-            foreach (var image in images)
-            {
-                model.CurrentImages.Add(new ImageViewModel
-                {
-                    ImageId = image.Id,
-                    CurrentImage = image.Name,
-                });
-            }
 
             return View(model);
         }
@@ -112,9 +103,16 @@ namespace HealthHerb.Controllers
             record.Discount = model.Discount;
             record.Quantity = model.Quantity;
 
-            await crud.Update(record);
+            if (model.Image == null)
+            {
+                record.Image = model.CurrentImage;
+            }
+            else
+            {
+                record.Image = fileManager.Upload(model.Image);
+            }
 
-            await UpdateImage(model.CurrentImages, record.Id);
+            await crud.Update(record);
 
             TempData["Success"] = "Success operation";
 
@@ -124,88 +122,9 @@ namespace HealthHerb.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            await DeleteImage(id);
             await crud.Delete(id);
 
             return Ok();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeletePhoto(string id)
-        {
-            await imageCrud.Delete(id);
-            return Ok();
-        }
-
-        private async Task UpdateImage(List<ImageViewModel> images, string productId)
-        {
-            foreach (var image in images)
-            {
-                if (image.ImageId == null)
-                {
-                    if (image.NewImage != null)
-                    {
-                        var newRecord = new Image
-                        {
-                            Name = fileManager.Upload(image.NewImage),
-                            ProductId = productId
-                        };
-
-                        await imageCrud.Add(newRecord);
-                    }
-
-                    continue;
-                }
-
-                var record = await imageCrud.GetById(image.ImageId);
-
-                if (image.NewImage != null)
-                {
-                    fileManager.Delete(record.Name);
-                    record.Name = fileManager.Upload(image.NewImage);
-                    await imageCrud.Update(record);
-                }
-            }
-        }
-
-        private async Task DeleteImage(string productId)
-        {
-            var images = await imageCrud.GetAll(img => img.ProductId.Equals(productId));
-
-            foreach (var image in images)
-            {
-                fileManager.Delete(image.Name);
-            }
-
-            await imageCrud.Delete(img => img.ProductId.Equals(productId));
-        }
-
-        private async Task CreateImage(string productId, List<IFormFile> images)
-        {
-            if (productId == null)
-            {
-                return;
-            }
-
-            string image = "noimage.jpg";
-
-            if (images == null)
-            {
-                await imageCrud.Add(new Image
-                {
-                    Name = image,
-                    ProductId = productId,
-                });
-            }
-
-            for (int i = 0; i < images.Count; i++)
-            {
-                await imageCrud.Add(new Image
-                {
-                    Name = fileManager.Upload(images[i]),
-                    ProductId = productId,
-                });
-            }
         }
     }
 }

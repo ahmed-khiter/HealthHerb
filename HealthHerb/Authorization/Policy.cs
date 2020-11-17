@@ -8,9 +8,9 @@ namespace HealthHerb.Authorization
 {
     public static class Policy
     {
-        public const string PowerAdmin = "PowerAdmin";
+        public const string Admin = "Admin";
 
-        public static AuthorizationPolicy PowerAdminPolicy()
+        public static AuthorizationPolicy AdminPolicy()
         {
             return new AuthorizationPolicyBuilder().RequireRole(Role.Admin).Build();
         }

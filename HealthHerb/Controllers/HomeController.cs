@@ -46,90 +46,16 @@ namespace HealthHerb.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = await productCrud.GetAll(new string[] { "Images" });
+            var model = await productCrud.GetAll();
             return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> SpecificProduct(string productId)
         {
-            var model = await productCrud.GetById(productId, new string[] { "Images" });
+            var model = await productCrud.GetById(productId);
             return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateCart(string productId)
-        {
-            var product = await productCrud.GetById(productId);
-
-            if (product == null)
-            {
-                return Redirect("/");
-            }
-
-            if (!signInManager.IsSignedIn(User))
-            {
-                return Redirect("/Account/Login");
-            }
-
-            if (signInManager.IsSignedIn(User))
-            {
-                var userId = userManager.GetUserId(User);
-                var productIsExists = await cartCrud.GetById(m => m.ProductId == productId && m.UserId == userId);
-
-                if (productIsExists == null)
-                {
-                    await cartCrud.Add(new Cart
-                    {
-                        ProductId = productId,
-                        Product = product,
-                        Quantity = 1,
-                        TotalPrice = product.Price,
-                        UserId = userId
-                    });
-                }
-
-                productIsExists.Quantity += 1;
-                productIsExists.TotalPrice *= productIsExists.Quantity;
-
-                await cartCrud.Update(productIsExists);
-              
-            }
-
-            TempData["success"] = $"Product {product.Name} added to cart";
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteCart(string cartId)
-        {
-            var model = await productCrud.GetById(cartId);
-
-            if (model == null)
-            {
-                return NotFound();
-            }
-
-            await cartCrud.Delete(cartId);
-
-            TempData["success"] = "Success create";
-
-            return RedirectToAction(nameof(CartList));
-
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CartList()
-        {
-            if (signInManager.IsSignedIn(User))
-            {
-                var userId = userManager.GetUserId(User);
-                return View(await cartCrud.GetAll(m => m.UserId == userId));
-            }
-
-            return Redirect("/Account/Login");
-        }
+        }       
 
         [HttpGet]
         public async Task<IActionResult> PrepareSingleOrder(string productId)
@@ -147,20 +73,20 @@ namespace HealthHerb.Controllers
                 return RedirectToAction(nameof(SpecificProduct), new { productId });
             }
 
-            var model = new OrderViewModel
+            var model = new SingleOrderViewModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber, 
                 Price = product.Price,
-                TotalPrice = product.Price,               
+                ProductsId = product.Id,
+                ProductName = product.Name
             };
-            model.ProductsId.Add(product.Id);
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PrepareSingleOrder(OrderViewModel model)
+        public async Task<IActionResult> PrepareSingleOrder(SingleOrderViewModel model)
         {
             if (!ModelState.IsValid)
             {

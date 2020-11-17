@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using HealthHerb.Models.User;
 using HealthHerb.ViewModels.Accounts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthHerb.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly UserManager<BaseUser> userManager;
@@ -59,7 +61,7 @@ namespace HealthHerb.Controllers
 
             var user = new BaseUser
             {
-                AccountType = model.AccountType,
+                AccountType = Enum.AccountType.Client,
                 FullName = model.FirstName + " " +model.LastName,
                 Email = model.Email,
                 UserName = model.Email,
@@ -72,7 +74,7 @@ namespace HealthHerb.Controllers
 
             if (result.Succeeded)
             {
-
+                await signInManager.SignInAsync(user, true);
                 TempData["Success"] = "Success register, welcome to Health Herb";
 
                 return Redirect("/");

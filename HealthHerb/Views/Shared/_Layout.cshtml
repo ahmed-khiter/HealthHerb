@@ -1,283 +1,69 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<BaseUser> signinManager
+@inject UserManager<BaseUser> userManager
+@{ 
+    var user = await userManager.GetUserAsync(User);
+    bool isLogged = signinManager.IsSignedIn(User);
+    bool isAdmin = User.IsInRole(Role.Admin);
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/prettyPhoto.css" rel="stylesheet">
+    <link href="/css/price-range.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/responsive.css" rel="stylesheet">
     <title>@ViewData["Title"] - HealthHerb</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link href="~/css/font-awesome.css" rel="stylesheet" />
-    <link href="~/css/jstarbox.css" rel="stylesheet" />
-    <link href="~/css/style.css" rel="stylesheet" />
-    <!-- start-smoth-scrolling -->
-    <link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
-    <!--- start-rate---->
 </head>
 <body>
-    <div class="header">
-
-        <div class="container">
-
-            <div class="logo">
-                <h1>Health<a asp-controller="Home" asp-action="Index" >Herb Store</a></h1>
-            </div>
-            <div class="head-t">
-                <ul class="card">
-                    <li><a href="login.html"><i class="fa fa-user" aria-hidden="true"></i>Login</a></li>
-                    <li><a href="register.html"><i class="fa fa-arrow-right" aria-hidden="true"></i>Register</a></li>
-                    <li><a href="about.html"><i class="fa fa-file-text-o" aria-hidden="true"></i>Order History</a></li>
-                    <li><a href="shipping.html"><i class="fa fa-ship" aria-hidden="true"></i>Shipping</a></li>
-                </ul>
-            </div>      
-
-            <div class="nav-top">
-                <nav class="navbar navbar-default">
-
-                    <div class="navbar-header nav_2">
-                        <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-
-
+    <header id="header">
+        <!--header-->
+        <div class="header-middle">
+            <!--header-middle-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 clearfix">
+                        <div class="logo pull-left">
+                            <a asp-controller="home" asp-action="index" ><img src="~/images/logo.png" style="width:60px" /></a>
+                        </div>
                     </div>
-                    <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
-                        <ul class="nav navbar-nav ">
-                            <li class=" active"><a href="index.html" class="hyper "><span>Home</span></a></li>
-
-                            <li class="dropdown ">
-                                <a href="#" class="dropdown-toggle  hyper" data-toggle="dropdown"><span>Kitchen<b class="caret"></b></span></a>
-                                <ul class="dropdown-menu multi">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <ul class="multi-column-dropdown">
-
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Water & Beverages</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Fruits & Vegetables</a></li>
-                                                <li><a href="kitchen.html"> <i class="fa fa-angle-right" aria-hidden="true"></i>Staples</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Branded Food</a></li>
-
-                                            </ul>
-
-                                        </div>
-                                        <div class="col-sm-3">
-
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Breakfast &amp; Cereal</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Snacks</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Spices</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Biscuit &amp; Cookie</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Sweets</a></li>
-
-                                            </ul>
-
-                                        </div>
-                                        <div class="col-sm-3">
-
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Pickle & Condiment</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Instant Food</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Dry Fruit</a></li>
-                                                <li><a href="kitchen.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Tea &amp; Coffee</a></li>
-
-                                            </ul>
-                                        </div>
-                                        <div class="col-sm-3 w3l">
-                                            <a href="kitchen.html"><img src="images/me.png" class="img-responsive" alt=""></a>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-
-                                <a href="#" class="dropdown-toggle hyper" data-toggle="dropdown"><span> Personal Care <b class="caret"></b></span></a>
-                                <ul class="dropdown-menu multi multi1">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i> Ayurvedic </a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Baby Care</a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Cosmetics</a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Deo & Purfumes</a></li>
-
-                                            </ul>
-
-                                        </div>
-                                        <div class="col-sm-3">
-
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="care.html"> <i class="fa fa-angle-right" aria-hidden="true"></i>Hair Care </a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Oral Care</a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Personal Hygiene</a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Skin care</a></li>
-
-                                            </ul>
-
-                                        </div>
-                                        <div class="col-sm-3">
-
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i> Fashion Accessories </a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Grooming Tools</a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Shaving Need</a></li>
-                                                <li><a href="care.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Sanitary Needs</a></li>
-
-                                            </ul>
-                                        </div>
-                                        <div class="col-sm-3 w3l">
-                                            <a href="care.html"><img src="images/me1.png" class="img-responsive" alt=""></a>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle hyper" data-toggle="dropdown"><span>Household<b class="caret"></b></span></a>
-                                <ul class="dropdown-menu multi multi2">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Cleaning Accessories</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>CookWear</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Detergents</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Gardening Needs</a></li>
-
-                                            </ul>
-
-                                        </div>
-                                        <div class="col-sm-3">
-
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Kitchen & Dining</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>KitchenWear</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Pet Care</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Plastic Wear</a></li>
-
-                                            </ul>
-
-                                        </div>
-                                        <div class="col-sm-3">
-
-                                            <ul class="multi-column-dropdown">
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Pooja Needs</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Serveware</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Safety Accessories</a></li>
-                                                <li><a href="hold.html"><i class="fa fa-angle-right" aria-hidden="true"></i>Festive Decoratives </a></li>
-
-                                            </ul>
-                                        </div>
-                                        <div class="col-sm-3 w3l">
-                                            <a href="hold.html"><img src="images/me2.png" class="img-responsive" alt=""></a>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </ul>
-                            </li>
-
-                            <li><a href="codes.html" class="hyper"> <span>Codes</span></a></li>
-                            <li><a href="contact.html" class="hyper"><span>Contact Us</span></a></li>
-                        </ul>
+                    <div class="col-md-8 clearfix">
+                        <div class="shop-menu clearfix pull-right">
+                            <ul class="nav navbar-nav">
+                                <li><a asp-controller="home" asp-action="index" ><i class="fa fa-home"></i> Home</a></li>
+                                <li><a asp-controller="cart" asp-action="index" ><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                @if (!isLogged)
+                                {
+                                    <li><a asp-controller="account" asp-action="login"><i class="fa fa-lock"></i> Login</a></li>
+                                    <li><a asp-controller="account" asp-action="register"><i class="fa fa-registered"></i> register</a></li>
+                                }
+                                @if (isLogged)
+                                {
+                                    <li><a asp-controller="account" asp-action="logout"><i class="fa fa-lock"></i> Log out</a></li>
+                                }
+                                @if (isLogged && isAdmin)
+                                {
+                                    <li>
+                                        <a asp-controller="product" asp-action="list">
+                                            <i class="fa fa-dashboard"></i> Dashboard
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
                     </div>
-                </nav>
-                <div class="cart">
-
-                    <span class="fa fa-shopping-cart my-cart-icon"><span class="badge badge-notify my-cart-badge"></span></span>
                 </div>
-                <div class="clearfix"></div>
             </div>
-
         </div>
-    </div>
+    </header>
+  
     @RenderBody()
-
-
-    <!--footer-->
-    <!--<div class="footer">
-        <div class="container">
-            <div class="col-md-3 footer-grid">
-                <h3>About Us</h3>
-                <p>
-                    Nam libero tempore, cum soluta nobis est eligendi
-                    optio cumque nihil impedit quo minus id quod maxime
-                    placeat facere possimus.
-                </p>
-            </div>
-            <div class="col-md-3 footer-grid ">
-                <h3>Menu</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="kitchen.html">Kitchen</a></li>
-                    <li><a href="care.html">Personal Care</a></li>
-                    <li><a href="hold.html">Household</a></li>
-                    <li><a href="codes.html">Short Codes</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="col-md-3 footer-grid ">
-                <h3>Customer Services</h3>
-                <ul>
-                    <li><a href="shipping.html">Shipping</a></li>
-                    <li><a href="terms.html">Terms & Conditions</a></li>
-                    <li><a href="faqs.html">Faqs</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li><a href="offer.html">Online Shopping</a></li>
-
-                </ul>
-            </div>
-            <div class="col-md-3 footer-grid">
-                <h3>My Account</h3>
-                <ul>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="register.html">Register</a></li>
-                    <li><a href="wishlist.html">Wishlist</a></li>
-
-                </ul>
-            </div>
-            <div class="clearfix"></div>
-            <div class="footer-bottom">
-                <h2><a asp-controller="Home" asp-action="Index" >Health Herb Store</a></h2>
-                <ul class="social-fo">
-                    <li><a href="#" class=" face"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                    <li><a href="#" class=" twi"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                    <li><a href="#" class=" pin"><i class="fa fa-pinterest-p" aria-hidden="true"></i></a></li>
-                    <li><a href="#" class=" dri"><i class="fa fa-dribbble" aria-hidden="true"></i></a></li>
-                </ul>
-                <div class=" address">
-                    <div class="col-md-4 fo-grid1">
-                        <p><i class="fa fa-home" aria-hidden="true"></i>12K Street , 45 Building Road Canada.</p>
-                    </div>
-                    <div class="col-md-4 fo-grid1">
-                        <p><i class="fa fa-phone" aria-hidden="true"></i>+1234 758 839 , +1273 748 730</p>
-                    </div>
-                    <div class="col-md-4 fo-grid1">
-                        <p><a href="mailto:info@example.com"><i class="fa fa-envelope-o" aria-hidden="true"></i>info@example1.com</a></p>
-                    </div>
-                    <div class="clearfix"></div>
-
-                </div>
-            </div>
-            <div class="copy-right">
-                <p> &copy; Health Herb store. All Rights Reserved | Design by  <a href="http://w3layouts.com/"> W3layouts</a></p>
-            </div>
-        </div>
-    </div>-->
-    <!-- //footer-->
-
-    <script src="~/js/bootstrap.js"></script>
-    <script src="~/js/easing.js"></script>
-    <script src="~/js/easyResponsiveTabs.js"></script>
-    <script src="~/js/jquery.mycart.js"></script>
-    <script src="~/js/jquery.vide.min.js"></script>
-    <script src="~/js/jquery.zoomtoo.js"></script>
-    <script src="~/js/jquery-1.11.1.min.js"></script>
-    <script src="~/js/modernizr.custom.js"></script>
-    <script src="~/js/jstarbox.js"></script>
-    <script src="~/js/move-top.js"></script>
-    <script src="~/js/site.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

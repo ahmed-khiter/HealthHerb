@@ -1,4 +1,69 @@
-﻿@{
+﻿@model IEnumerable<Product>
+@inject SignInManager<BaseUser>    signinManager
+@inject UserManager<BaseUser> userManager
+@{
+    var user = await userManager.GetUserAsync(User);
+    bool isLogged = signinManager.IsSignedIn(User);
+    bool isAdmin = User.IsInRole(Role.Admin); 
     ViewData["Title"] = "Home Page";
 }
 
+<div class="container">
+
+    <div class="text-center">
+        <img src="~/images/logo.png" alt="Alternate Text" />
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="p-5 text-center" style="height:400px;background: url('https://cdn.shopify.com/s/files/1/0503/9561/1322/files/yes_720x.jpg?v=1604934788') center center no-repeat">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="font-weight-bold mt-0">Invitation sales from our eBay Customers</h2>
+            <p>
+                <h3 class="font-weight-bold">
+                    You have been specifically invited to buy the same product as before we have changed a few things around but everything is exactly the same as your last purchase.
+                </h3>
+                <br />
+                We have taken a great care of taking care of our customers over the last year and now we will continue to do so through our own website and to always provide you with the best prices with the quality service
+                <br /><br />
+                07719472557 - For our eBay Customers
+                <br /><br />
+                If you are interested in buying or have any enquiries please contact our customer service number +447719472557 via sms or WhatsApp
+                <br /><br />
+                You may receive invitation from other Contact Telephone Number, however if any direct enquiries please contact the number above for any help or questions
+            </p>
+        </div>
+    </div>
+    @foreach (var record in Model)
+    {
+        <div class="tab-content" style=" overflow: hidden; padding-top: 100px;">
+            <div class="tab-pane fade active in">
+                <div class="col-sm-3">
+                    <div class="product-image-wrapper">
+                        <div class="single-products">
+                            <div class="productinfo text-center">
+                                <img src="/uploads/@record.Image" alt="" />
+                                <h2>@record.Price</h2>
+                                <p>@record.Description</p>
+                                @if (!isLogged)
+                                {
+                                    <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
+                                }
+                                @if (isLogged)
+                                {
+                                    <a asp-controller="cart" asp-action="create" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    <a asp-controller="home" asp-action="PrepareSingleOrder" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>

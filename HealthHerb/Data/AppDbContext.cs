@@ -19,7 +19,6 @@ namespace HealthHerb.Data
         }
 
         public DbSet<Product> Products { get; set; }
-        public DbSet<Image> Images { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Discount> Discounts { get; set; }
 
