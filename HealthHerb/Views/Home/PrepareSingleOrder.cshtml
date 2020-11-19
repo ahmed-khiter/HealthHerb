@@ -1,91 +1,96 @@
 ﻿@model SingleOrderViewModel
+@inject ICrud<PaymentSetting> paymentSettingCrud
+@inject ICrud<Product> productCrud
 @{
     ViewData["Title"] = "Check out";
+    var product = await productCrud.GetById(Model.ProductsId);
+    var paymentSetting = await paymentSettingCrud.GetById("PaymentSetting");
+
 }
 <div class="container">
     <div class="signup-form">
-
         <h2>Checkout @Model.ProductName</h2>
+        <form method="post" asp-controller="home" asp-action="preparesingleorder">
+            <div class="row">
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="ProductsId" />
+                <input type="hidden" asp-for="ProductName" />
 
-    <form method="post" asp-controller="home" asp-action="preparesingleorder">
+                <div class="col-md-4">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" />
+                    <span asp-validation-for="FirstName"></span>
+                </div>
 
-        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                data-key="pk_test_YourPublishAbleKey"
-                data-amount="@ViewBag.PaymentAmount"
-                data-name="[My Company Name]"
-                data-description="10 rubberducks for 1$ each"
-                data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                data-locale="en"
-                data-zip-code="true"
-                data-label="Pay 10$">
-        </script>
+                <div class="col-md-4">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" />
+                    <span asp-validation-for="LastName"></span>
 
-        <div class="row">
-            <input type="hidden" asp-for="UserId" />
-            <input type="hidden" asp-for="ProductsId" />
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Address"></label>
+                    <input asp-for="Address" />
+                    <span asp-validation-for="Address"></span>
 
-            <div class="col-md-4">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" />
-                <span asp-validation-for="FirstName" ></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label asp-for="Apartment"></label>
+                    <input asp-for="Apartment" />
+                    <span asp-validation-for="Apartment"></span>
+
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="City"></label>
+                    <input asp-for="City" />
+                    <span asp-validation-for="City"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="Country"></label>
+                    <select class="form-control" asp-for="Country" asp-items="@(ViewData["Countries"] as SelectList)">
+                        <option selected disabled>--Selecte country--</option>
+                    </select>
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="col-md-4">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" />
-                <span asp-validation-for="LastName"></span>
+            <div class="row">
 
-            </div>
-            <div class="col-md-4">
-                <label asp-for="Address"></label>
-                <input asp-for="Address" />
-                <span asp-validation-for="Address" ></span>
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" />
+                    <span asp-validation-for="PhoneNumber"></span>
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label asp-for="Apartment"></label>
-                <input asp-for="Apartment" />
-                <span asp-validation-for="Apartment" ></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="PostalCode"></label>
+                    <input asp-for="PostalCode" />
+                    <span asp-validation-for="PostalCode"></span>
+
+                </div>
 
             </div>
 
-            <div class="col-md-4">
-                <label asp-for="City"></label>
-                <input asp-for="City" />
-                <span asp-validation-for="City" ></span>
-            </div>
+            <hr />
 
-            <div class="col-md-4">
-                <label asp-for="Country"></label>
-                <input asp-for="Country" />
-                <span asp-validation-for="Country" ></span>
-            </div>
-        </div>
-            
-        <div class="row">
-
-            <div class="col-md-6">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" />
-                <span asp-validation-for="PhoneNumber" ></span>
-
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="PostalCode"></label>
-                <input asp-for="PostalCode" />
-                <span asp-validation-for="PostalCode" ></span>
-
-            </div>
-  
-        </div>
-
-        <hr />
-
-        <button type="submit" class="btn btn-default">Checkout</button>
-    </form>
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="@paymentSetting.PublishKey"
+                    data-amount="@paymentSettingCrud.GetById("PaymentSetting")"
+                    data-name="Health Herb"
+                    data-description="@product.Description"
+                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                    data-locale="en"
+                    data-zip-code="true"
+                    data-currency="GBP"
+                    currency="GBP"
+                    data-label="@Model.Price">
+            </script>
+        </form>
 
     </div>
 </div>

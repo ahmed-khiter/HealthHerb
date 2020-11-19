@@ -29,6 +29,12 @@ namespace HealthHerb.Controllers
             this.fileManager = fileManager;
             this.crud = crud;
         }
+        
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
 
         [HttpGet]
         public async Task<IActionResult> List()
@@ -63,7 +69,7 @@ namespace HealthHerb.Controllers
 
             await crud.Add(record);
 
-            TempData["Success"] = "Success operation";
+            TempData["Success"] = "Success added product";
 
             return RedirectToAction(nameof(Create));
         }
@@ -124,7 +130,33 @@ namespace HealthHerb.Controllers
         {
             await crud.Delete(id);
 
-            return Ok();
+            return RedirectToAction(nameof(List));
+        }
+
+        public async Task<IActionResult> DecreaseItem(string id)
+        {
+            var record = await crud.GetById(id);
+
+            if (record.Quantity == 1)
+            {
+                record.Quantity -= 1;
+                await crud.Update(record);
+                return RedirectToAction(nameof(List));
+            }
+            else
+            {
+                record.Quantity -= 1;
+                await crud.Update(record);
+                return RedirectToAction(nameof(List));
+            }
+        }
+
+        public async Task<IActionResult> IncreaseItem(string id)
+        {
+            var record = await crud.GetById(id);
+            record.Quantity += 1;
+            await crud.Update(record);
+            return RedirectToAction(nameof(List));
         }
     }
 }

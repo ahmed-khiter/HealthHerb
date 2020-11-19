@@ -13,25 +13,32 @@ using HealthHerb.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using HealthHerb.ViewModels.Order;
 using HealthHerb.Enum;
+using HealthHerb.Models.Settings;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Stripe;
 
 namespace HealthHerb.Controllers
 {
     [AllowAnonymous]
     public class HomeController : Controller
     {
-        private readonly ICrud<Product> productCrud;
+        private readonly ICrud<Models.Product.Product> productCrud;
         private readonly ICrud<Cart> cartCrud;
-        private readonly ICrud<Order> orderCrud;
+        private readonly ICrud<Models.Product.Order> orderCrud;
         private readonly ICrud<OrderProduct> orderProductCrud;
+        private readonly ICrud<PaymentSetting> paymentSettingCrud;
+        private readonly ICrud<ShippingPrice> shippingPriceCrud;
         private readonly SignInManager<BaseUser> signInManager;
         private readonly UserManager<BaseUser> userManager;
 
         public HomeController
         (
-            ICrud<Product> productCrud,
+            ICrud<Models.Product.Product> productCrud,
             ICrud<Cart> cartCrud, 
-            ICrud<Order> orderCrud,
+            ICrud<Models.Product.Order> orderCrud,
             ICrud<OrderProduct> orderProductCrud,
+            ICrud<PaymentSetting> paymentSettingCrud,
+            ICrud<ShippingPrice> shippingPriceCrud,
             SignInManager<BaseUser> signInManager,
             UserManager<BaseUser> userManager
         )
@@ -40,6 +47,8 @@ namespace HealthHerb.Controllers
             this.cartCrud = cartCrud;
             this.orderCrud = orderCrud;
             this.orderProductCrud = orderProductCrud;
+            this.paymentSettingCrud = paymentSettingCrud;
+            this.shippingPriceCrud = shippingPriceCrud;
             this.signInManager = signInManager;
             this.userManager = userManager;
         }
@@ -73,6 +82,9 @@ namespace HealthHerb.Controllers
                 return RedirectToAction(nameof(SpecificProduct), new { productId });
             }
 
+            var countries = await shippingPriceCrud.GetAll();
+            ViewData["Countries"] =  new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
+
             var model = new SingleOrderViewModel
             {
                 FirstName = user.FirstName,
@@ -86,17 +98,32 @@ namespace HealthHerb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PrepareSingleOrder(SingleOrderViewModel model)
+        public async Task<IActionResult> PrepareSingleOrder(SingleOrderViewModel model, string stripeToken)
         {
+            var user = await userManager.GetUserAsync(User);
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var user = await userManager.GetUserAsync(User);
-
-            var order = await orderCrud.Add(new Order
+            Dictionary<string, string> Metadata = new Dictionary<string, string>();
+            Metadata.Add("Product", model.ProductName);
+            Metadata.Add("Quantity", "1");//TODO: add quantity here 
+            var options = new ChargeCreateOptions
             {
+                Amount = 1,//TODO: amount will added here from model
+                Currency = "GBP",
+                Description = model.ProductName,
+                Source = stripeToken,
+                ReceiptEmail = user.Email,
+                Metadata = Metadata
+            };
+            var service = new ChargeService();
+            Charge charge = service.Create(options);
+
+            var order = await orderCrud.Add(new Models.Product.Order
+            {
+                PaymentId = charge.Id,
                 UserId = model.UserId,
                 FirstName = model.FirstName,
                 LastName = model.LastName,

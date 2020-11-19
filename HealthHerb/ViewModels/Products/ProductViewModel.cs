@@ -22,7 +22,8 @@ namespace HealthHerb.ViewModels.Products
         [Required]
         public int Quantity { get; set; }
 
-        public decimal Discount { get; set; } = 0;
+        [Display(Name="Discount by percentage")]
+        public float Discount { get; set; } = 0;
 
         public string CurrentImage { get; set; }
 

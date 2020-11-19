@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<Product>
 @{
     Layout = "_AdminDashboard";
+    ViewData["Title"] = "Product List";
+
 }
 
 <div class="content-panel">
@@ -22,15 +24,21 @@
                     <tr class="gradeX">
                         <td><img style="max-width:100px" src="~/uploads/@record.Image" /></td>
                         <td>@record.Name</td>
-                        <td class="hidden-phone">@record.Price</td>
-                        <td class="center hidden-phone">@record.Quantity</td>
-                        <td class="center hidden-phone">@record.Discount</td>
+                        <td class="hidden-phone">£@record.Price</td>
                         <td class="center hidden-phone">
-
+                            <a class="cart_quantity_up btn btn-success" href="/product/increaseitem/@record.Id"> + </a>
+                            <strong>@record.Quantity</strong>
+                            <a class="cart_quantity_down btn btn-danger" href="/product/decreaseitem/@record.Id"> - </a>
+                        </td>
+                        <td class="center hidden-phone"><strong>@record.Discount</strong></td>
+                        <td class="center hidden-phone">
+                            <a class="btn btn-warning" asp-controller="product" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
+                            <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id">
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
+                            </form>
                         </td>
                     </tr>
                 }
-
 
             </tbody>
         </table>

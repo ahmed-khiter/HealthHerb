@@ -25,6 +25,7 @@
                 </thead>
                 @foreach (var record in Model)
                 {
+                    var price = record.Product.Price * (decimal)(record.Product.Discount / 100);
                     <tbody>
                         <tr>
                             <td class="cart_product">
@@ -42,7 +43,7 @@
                                 else
                                 {
                                     <del><p>@record.Product.Price</p></del>
-                                    <p>@(record.Product.Price-record.Product.Discount)</p>
+                                    <p>@(record.Product.Price-price)</p>
                                 }
                             </td>
                             <td class="cart_quantity">
@@ -53,7 +54,7 @@
                                 </div>
                             </td>
                             <td class="cart_total">
-                                <p class="cart_total_price">@(record.Quantity*(record.Product.Price - record.Product.Discount))</p>
+                                <p class="cart_total_price">@(record.Quantity*(record.Product.Price - price))</p>
                             </td>
                             <td class="cart_delete">
                                 <a class="cart_quantity_delete" onclick="location.href('cart/delete/@record.Id')"><i class="fa fa-times"></i></a>

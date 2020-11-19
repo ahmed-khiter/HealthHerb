@@ -1,6 +1,9 @@
 ﻿using HealthHerb.Authorization;
+using HealthHerb.Help;
+using HealthHerb.Models;
 using HealthHerb.Models.User;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace HealthHerb.Data.SeedData
 {
-    public static class SeedUsers
+    public static class Seed
     {
-        public static void Seed(UserManager<BaseUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static void SeedUser(UserManager<BaseUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             string email = "Dev@gmail.com";
             string firstName = "Emad";
@@ -28,10 +31,12 @@ namespace HealthHerb.Data.SeedData
                     NormalizedUserName = email.ToUpper(),
                     FirstName = firstName,
                     LastName = lastName,
-                    FullName = $"{firstName} {lastName}"
+                    FullName = $"{firstName} {lastName}",
+                    AccountType = Enum.AccountType.Admin,
+                    PhoneNumber = "01100811024",
                 };
 
-                var result = userManager.CreateAsync(user, "qaz2wsxedc").Result;
+                var result = userManager.CreateAsync(user, "_Aa123456789").Result;
 
                 if (result.Succeeded)
                 {
@@ -47,6 +52,26 @@ namespace HealthHerb.Data.SeedData
 
                     userManager.AddToRoleAsync(user, Role.Admin).Wait();
                 }
+            }
+        }
+
+        public static void SeedCountries(AppDbContext context)
+        {
+            var result = context.ShippingPrices.ToListAsync().Result;
+            if (result.Count()==0)
+            {
+                List<ShippingPrice> record = new List<ShippingPrice>();
+                foreach (var country in Countries.CountryList())
+                {
+                    record.Add(new ShippingPrice
+                    {
+                        Country = country,
+                        Price =0,
+                    });
+                }
+
+                context.ShippingPrices.AddRangeAsync(record).Wait();
+                context.SaveChangesAsync().Wait();
             }
         }
     }

@@ -36,34 +36,34 @@
             </p>
         </div>
     </div>
-    @foreach (var record in Model)
-    {
-        <div class="tab-content" style=" overflow: hidden; padding-top: 100px;">
-            <div class="tab-pane fade active in">
-                <div class="col-sm-3">
-                    <div class="product-image-wrapper">
-                        <div class="single-products">
-                            <div class="productinfo text-center">
-                                <img src="/uploads/@record.Image" alt="" />
-                                <h2>@record.Price</h2>
-                                <p>@record.Description</p>
-                                @if (!isLogged)
-                                {
-                                    <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                    <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
-                                }
-                                @if (isLogged)
-                                {
-                                    <a asp-controller="cart" asp-action="create" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                    <a asp-controller="home" asp-action="PrepareSingleOrder" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
-                                }
-                            </div>
-
+   
+<div class="tab-content" style=" overflow: hidden; padding-top: 100px;">
+    <div class="tab-pane fade active in">
+        @foreach (var record in Model)
+        {
+            <div class="col-sm-3">
+                <div class="product-image-wrapper">
+                    <div class="single-products">
+                        <div class="productinfo text-center">
+                            <img src="/uploads/@record.Image" alt="" />
+                            <h2><strong>£@record.Price</strong></h2>
+                            <p>@record.Description</p>
+                            @if (!isLogged)
+                            {
+                                <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
+                            }
+                            @if (isLogged)
+                            {
+                                <a asp-controller="cart" asp-action="create" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                <a asp-controller="home" asp-action="PrepareSingleOrder" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
+                            }
                         </div>
+
                     </div>
                 </div>
-
             </div>
+        }
         </div>
-    }
+    </div>
 </div>

@@ -7,6 +7,7 @@ using HealthHerb.Data;
 using HealthHerb.Data.SeedData;
 using HealthHerb.Help;
 using HealthHerb.Interface;
+using HealthHerb.Models.Settings;
 using HealthHerb.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Stripe;
 
 namespace HealthHerb
 {
@@ -47,7 +49,12 @@ namespace HealthHerb
 
             // Identity
             services
-                .AddIdentity<BaseUser, IdentityRole>()
+                .AddIdentity<BaseUser, IdentityRole>(
+                options=>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireUppercase = false;
+                })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -70,7 +77,9 @@ namespace HealthHerb
             IApplicationBuilder app,
             IWebHostEnvironment env,
             UserManager<BaseUser> userManager,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            AppDbContext context,
+            ICrud<PaymentSetting> paymentSettingCrud
         )
         {
             if (env.IsDevelopment())
@@ -83,8 +92,10 @@ namespace HealthHerb
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            SeedUsers.Seed(userManager, roleManager);
+            var payment =  paymentSettingCrud.GetById("PaymentSetting").Result;
+            StripeConfiguration.ApiKey=payment.SecretKey;
+            Seed.SeedUser(userManager, roleManager);
+            Seed.SeedCountries(context);
 
             app.UseHttpsRedirection();
 

@@ -17,7 +17,7 @@ namespace HealthHerb.Models.Product
         public decimal Price { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Discount { get; set; }
+        public float Discount { get; set; }
         public string Description { get; set; }
 
     }

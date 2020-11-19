@@ -122,5 +122,11 @@ namespace HealthHerb.Controllers
 
             return Redirect("/");
         }
+
+        public async Task<IActionResult> logout()
+        {
+            await signInManager.SignOutAsync();
+            return Redirect("/");
+        }
     }
 }

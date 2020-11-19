@@ -10,11 +10,11 @@ namespace HealthHerb.Controllers
 {
     public class DiscountController : Controller
     {
-        private readonly ICrud<Discount> crud;
+        private readonly ICrud<Coupon> crud;
 
         public DiscountController
         (
-            ICrud<Discount> crud
+            ICrud<Coupon> crud
         )
         {
             this.crud = crud;
@@ -33,7 +33,7 @@ namespace HealthHerb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Discount model)
+        public async Task<IActionResult> Create(Coupon model)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace HealthHerb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Discount model)
+        public async Task<IActionResult> Edit(Coupon model)
         {
             if (!ModelState.IsValid)
             {

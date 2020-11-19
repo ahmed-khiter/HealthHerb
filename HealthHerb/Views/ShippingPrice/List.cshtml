@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ShippingPrice>
+@{
+    Layout = "_AdminDashboard";
+    ViewData["Title"] = "Set shipping price";
+}
+
+<div class="content-panel">
+    <div class="adv-table">
+        <a class="btn btn-primary p-5 pl-4"  asp-controller="shippingprice" asp-action="create" >Create new shipping</a>
+        <br /> <br />
+        <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="hidden-table-info">
+            <thead>
+                <tr>
+                    <th>country</th>
+                    <th>Shipping price</th>
+                    <th class="hidden-phone">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    <tr class="gradeX">
+                        <td>@record.Country</td>
+                        <td>£@record.Price</td>
+                        <td class="center hidden-phone">
+                            <a class="btn btn-warning" asp-controller="shippingprice" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
+                            <form method="post" asp-controller="shippingprice" asp-action="delete" asp-route-id="@record.Id">
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
+                            </form>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

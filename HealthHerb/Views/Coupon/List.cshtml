@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Coupon>
+@{
+    Layout = "_AdminDashboard";
+    ViewData["Title"] = "Coupon List";
+
+}
+
+<div class="content-panel">
+    <div class="adv-table">
+        <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="hidden-table-info">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Discount by percentage</th>
+                    <th class="hidden-phone">How many used</th>
+                    <th class="hidden-phone">start</th>
+                    <th class="hidden-phone">end</th>
+                    <th class="hidden-phone">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    <tr class="gradeX">
+                        <td>@record.Code</td>
+                        <td>@record.Amount</td>
+                        <td class="hidden-phone">@record.ManyUsed</td>
+                        <td class="center hidden-phone">
+                            <strong>@record.Start</strong>
+                        </td>
+                        <td class="center hidden-phone"><strong>@record.End</strong></td>
+                        <td class="center hidden-phone">
+                            <a class="btn btn-warning" asp-controller="coupon" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
+                            <form method="post" asp-controller="coupon" asp-action="delete" asp-route-id="@record.Id">
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
+                            </form>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
