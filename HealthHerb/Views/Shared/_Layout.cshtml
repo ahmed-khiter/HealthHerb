@@ -30,18 +30,18 @@
                 <div class="row">
                     <div class="col-md-4 clearfix">
                         <div class="logo pull-left">
-                            <a asp-controller="home" asp-action="index" ><img src="~/images/logo.png" style="width:60px" /></a>
+                            <a asp-controller="home" asp-action="index"><img src="~/images/logo.png" style="width:60px" /></a>
                         </div>
                     </div>
                     <div class="col-md-8 clearfix">
                         <div class="shop-menu clearfix pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a asp-controller="home" asp-action="index" ><i class="fa fa-home"></i> Home</a></li>
-                                <li><a asp-controller="cart" asp-action="index" ><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                <li><a asp-controller="home" asp-action="index"><i class="fa fa-home"></i> Home</a></li>
+                                <li><a asp-controller="cart" asp-action="index"><i class="fa fa-shopping-cart"></i> Cart</a></li>
                                 @if (!isLogged)
                                 {
                                     <li><a asp-controller="account" asp-action="login"><i class="fa fa-lock"></i> Login</a></li>
-                                    <li><a asp-controller="account" asp-action="register"><i class="fa fa-registered"></i> register</a></li>
+                                    <li><a asp-controller="account" asp-action="register"><i class="fa fa-sign-in"></i> register</a></li>
                                 }
                                 @if (isLogged)
                                 {
@@ -62,8 +62,10 @@
             </div>
         </div>
     </header>
-  
+
     @RenderBody()
+    <script src="~/js/jquery.js"></script>
+    <script src="~/fontawesome-iconpicker/js/fontawesome-iconpicker.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

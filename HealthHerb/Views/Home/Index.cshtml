@@ -13,6 +13,21 @@
     <div class="text-center">
         <img src="~/images/logo.png" alt="Alternate Text" />
     </div>
+    <div class="pt-2 pb-2">
+        @if (TempData.ContainsKey("Success"))
+        {
+            <div class="alert alert-success">
+                <i class="fa fa-check-square-o"></i> @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData.ContainsKey("Error"))
+        {
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
+            </div>
+        }
+    </div>
 
     <div class="row">
         <div class="col-md-6">
@@ -36,34 +51,36 @@
             </p>
         </div>
     </div>
-   
-<div class="tab-content" style=" overflow: hidden; padding-top: 100px;">
-    <div class="tab-pane fade active in">
-        @foreach (var record in Model)
-        {
-            <div class="col-sm-3">
-                <div class="product-image-wrapper">
-                    <div class="single-products">
-                        <div class="productinfo text-center">
-                            <img src="/uploads/@record.Image" alt="" />
-                            <h2><strong>£@record.Price</strong></h2>
-                            <p>@record.Description</p>
-                            @if (!isLogged)
-                            {
-                                <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
-                            }
-                            @if (isLogged)
-                            {
-                                <a asp-controller="cart" asp-action="create" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                <a asp-controller="home" asp-action="PrepareSingleOrder" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
-                            }
-                        </div>
 
+    <div class="tab-content" style=" overflow: hidden; padding-top: 100px;">
+        <div class="tab-pane fade active in">
+            @foreach (var record in Model)
+            {
+                <div class="col-sm-3">
+                    <div class="product-image-wrapper">
+                        <div class="single-products">
+                            <div class="productinfo text-center">
+                                <img src="/uploads/@record.Image" alt="" />
+                                <h2><strong>£@record.Price</strong></h2>
+                                <p>@record.Description</p>
+                                @if (!isLogged)
+                                {
+                                    <a class="btn btn-info add-to-cart" asp-controller="home" asp-action="specificproduct" asp-route-productId="@record.Id">View product</a>
+                                    <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    <a asp-controller="account" asp-action="register" class="btn btn-primary add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
+                                }
+                                @if (isLogged)
+                                {
+                                    <a class="btn btn-info add-to-cart" asp-controller="home" asp-action="specificproduct" asp-route-productId="@record.Id">View product</a>
+                                    <a asp-controller="cart" asp-action="create" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                    <a asp-controller="home" asp-action="PrepareSingleOrder" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
+                                }
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
         </div>
     </div>
 </div>

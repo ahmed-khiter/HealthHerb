@@ -69,20 +69,20 @@ namespace HealthHerb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(string cartId)
+        public async Task<IActionResult> Delete(string id)
         {
-            var model = await productCrud.GetById(cartId);
+            var model = await crud.GetById(id);
 
             if (model == null)
             {
                 return NotFound();
             }
 
-            await crud.Delete(cartId);
+            await crud.Delete(id);
 
             TempData["success"] = "Success create";
 
-            return RedirectToAction(nameof(Index));
+            return Ok();
 
         }
 

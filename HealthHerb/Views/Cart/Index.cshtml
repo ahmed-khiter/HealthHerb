@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Cart>
 @{
     ViewData["Title"] = "Cart list";
+    double totalPrice = 0;
 }
 
 <section id="cart_items">
@@ -25,9 +26,10 @@
                 </thead>
                 @foreach (var record in Model)
                 {
-                    var price = record.Product.Price * (decimal)(record.Product.Discount / 100);
+                    var price = record.Quantity * (record.Product.Price - record.Product.Price * (decimal)(record.Product.Discount / 100));
+                    totalPrice += (double)price;
                     <tbody>
-                        <tr>
+                        <tr id="item-@record.Id">
                             <td class="cart_product">
                                 <a href=""><img src="/uploads/@record.Product.Image" class="img-fluid" style="max-width:120px" ></a>
                             </td>
@@ -54,16 +56,41 @@
                                 </div>
                             </td>
                             <td class="cart_total">
-                                <p class="cart_total_price">@(record.Quantity*(record.Product.Price - price))</p>
+                                <p class="cart_total_price">@price</p>
                             </td>
                             <td class="cart_delete">
-                                <a class="cart_quantity_delete" onclick="location.href('cart/delete/@record.Id')"><i class="fa fa-times"></i></a>
+                                <a data-id="@record.Id" class="cart_quantity_delete" ><i class="fa fa-times"></i></a>
+                                <input type="hidden" value="@record.Id" id="id_cart" />
                             </td>
                         </tr>
                     </tbody>
                 }
-
             </table>
+            <label><strong>Total price : </strong>@totalPrice</label>
+            <form>
+                <button asp-controller="" asp-action="" >Checkout</button>
+            </form>
         </div>
     </div>
 </section> <!--/#cart_items-->
+@section Scripts{ 
+    <script>
+        $('.cart_quantity_delete').on('click', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('data-id');
+            $.ajax({
+                method: 'POST',
+                url: '/cart/delete',
+                data: {
+                    id
+                },
+                success: function () {
+                    $('#item-' + id).remove();
+                },
+                error: function () {
+                    alert('Something went wrong please refresh the page');
+                }
+            });
+        });
+    </script>
+}

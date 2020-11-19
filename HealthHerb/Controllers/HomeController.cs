@@ -53,6 +53,7 @@ namespace HealthHerb.Controllers
             this.userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var model = await productCrud.GetAll();
@@ -108,10 +109,10 @@ namespace HealthHerb.Controllers
 
             Dictionary<string, string> Metadata = new Dictionary<string, string>();
             Metadata.Add("Product", model.ProductName);
-            Metadata.Add("Quantity", "1");//TODO: add quantity here 
+            Metadata.Add("Quantity", "500");//TODO: add quantity here 
             var options = new ChargeCreateOptions
             {
-                Amount = 1,//TODO: amount will added here from model
+                Amount = (long?)(model.Price*100),//TODO: amount will added here from model
                 Currency = "GBP",
                 Description = model.ProductName,
                 Source = stripeToken,
@@ -144,7 +145,14 @@ namespace HealthHerb.Controllers
                 BaseUser = user,
                 UserId = user.Id,
             });
-            return View();
+
+            var product = await productCrud.GetById(model.ProductsId);
+            product.Quantity -= 1;
+            await productCrud.Update(product);
+
+            ViewData["Success"] = "Your order is going to your address soon";
+
+            return View(nameof(Index));
         }
 
         public IActionResult Privacy()

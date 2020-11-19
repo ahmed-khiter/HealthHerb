@@ -130,5 +130,28 @@ namespace HealthHerb.Controllers
                 return Json($"This code : {Code} is already in use ");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckCoupon(string coupon)
+        {
+            var record = await crud.GetById(m => m.Code.Contains(coupon));
+
+            if (record == null)
+            {
+                return NotFound();
+            }
+
+            if (record.ManyUsed > 0 && (DateTime.Now > record.Start || DateTime.Now < record.End))
+            {
+                record.ManyUsed -= 1;
+                await crud.Update(record);
+                return Ok(new { amount = record.Amount });
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
     }
 }
