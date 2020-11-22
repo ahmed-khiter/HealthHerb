@@ -31,7 +31,7 @@
                         <td class="center hidden-phone"><strong>@record.End</strong></td>
                         <td class="center hidden-phone">
                             <a class="btn btn-warning" asp-controller="coupon" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
-                            <form method="post" asp-controller="coupon" asp-action="delete" asp-route-id="@record.Id">
+                            <form method="post" asp-controller="coupon" asp-action="delete" asp-route-id="@record.Id" style="display:inline">
                                 <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
                             </form>
                             

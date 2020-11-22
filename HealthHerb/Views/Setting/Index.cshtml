@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Order>
+@{
+    Layout = "_AdminDashboard";
+}
+
+<div class="content-panel">
+    <h2><i class="fa fa-bar-chart-o" style="color:#4ECDC4"></i> System Statistics</h2>
+
+    <div style="padding:15px"></div>
+
+    <div class="row">
+
+        <div class="col-md-3">
+
+            <div class="box">
+
+                <h5><i class="fa fa-money"></i> Total Sales</h5>
+
+                <h2>£@ViewData["total"]</h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="box">
+
+                <h5><i class="fa fa-calendar"></i> This day</h5>
+
+                <h2>£@ViewData["today"]</h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="box">
+
+                <h5><i class="fa fa-calendar"></i> This month</h5>
+
+                <h2>£@ViewData["month"]</h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="box">
+
+                <h5><i class="fa fa-calendar"></i> This year</h5>
+
+                <h2>£@ViewData["year"]</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

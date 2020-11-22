@@ -4,6 +4,7 @@
     var user = await userManager.GetUserAsync(User);
     bool isLogged = signinManager.IsSignedIn(User);
     bool isAdmin = User.IsInRole(Role.Admin);
+    var i = 5;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +18,7 @@
     <link href="/css/prettyPhoto.css" rel="stylesheet">
     <link href="/css/price-range.css" rel="stylesheet">
     <link href="/css/animate.css" rel="stylesheet">
-    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet" asp-append-version="true">
     <link href="/css/responsive.css" rel="stylesheet">
     <title>@ViewData["Title"] - HealthHerb</title>
 </head>
@@ -45,12 +46,13 @@
                                 }
                                 @if (isLogged)
                                 {
+                                    <li><a asp-controller="home" asp-action="orderhistory"><i class="fa fa-clock-o "></i>history</a></li>
                                     <li><a asp-controller="account" asp-action="logout"><i class="fa fa-lock"></i> Log out</a></li>
                                 }
                                 @if (isLogged && isAdmin)
                                 {
                                     <li>
-                                        <a asp-controller="product" asp-action="list">
+                                        <a asp-controller="setting" asp-action="index">
                                             <i class="fa fa-dashboard"></i> Dashboard
                                         </a>
                                     </li>
@@ -65,7 +67,11 @@
 
     @RenderBody()
     <script src="~/js/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <script src="~/fontawesome-iconpicker/js/fontawesome-iconpicker.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

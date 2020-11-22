@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HealthHerb.Authorization;
 using HealthHerb.Models.User;
 using HealthHerb.ViewModels.Accounts;
 using Microsoft.AspNetCore.Authorization;
@@ -75,6 +76,7 @@ namespace HealthHerb.Controllers
             if (result.Succeeded)
             {
                 await signInManager.SignInAsync(user, true);
+                await userManager.AddToRoleAsync(user, Role.Consumer);
                 TempData["Success"] = "Success register, welcome to Health Herb";
 
                 return Redirect("/");

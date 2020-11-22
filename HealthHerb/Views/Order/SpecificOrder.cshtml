@@ -1,0 +1,110 @@
+﻿@model Order
+@{
+    Layout = "_AdminDashboard";
+    decimal totalOrderPrice = 0;
+}
+
+<div class="content-panel">
+    <h4>Order Details</h4>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <h5>Customer Details</h5>
+
+            <table class="table table-striped">
+                <tr>
+                    <td width="200"><strong>Full Name</strong></td>
+                    <td>@(Model.FirstName + " " + Model.LastName)</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.Email)</strong></td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.PhoneNumber)</strong></td>
+                    <td>@Model.PhoneNumber</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.Country)</strong></td>
+                    <td>@Model.Country</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.City)</strong></td>
+                    <td>@Model.City</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.PostalCode)</strong></td>
+                    <td>@Model.PostalCode</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.Apartment)</strong></td>
+                    <td>@Model.Apartment</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+
+            <h5>Order Details</h5>
+
+            <table class="table table-striped">
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.OrderNumber)</strong></td>
+                    <td>@Model.OrderNumber</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.OrderStatus)</strong></td>
+                    <td>@Model.OrderStatus</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>Shipping Address</strong></td>
+                    <td>@Model.Address</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>@Html.DisplayNameFor(m => m.CreatedAt)</strong></td>
+                    <td>@Model.CreatedAt</td>
+                </tr>
+                <tr>
+                    <td width="200"><strong>Total Order Price</strong></td>
+                    <td><strong class="text-success" id="order-price"></strong></td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <h4>@Html.DisplayNameFor(m => m.OrderProducts)</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Qt.</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (OrderProduct product in Model.OrderProducts)
+            {
+                <tr>
+                    <td>@product.Product.Name</td>
+                    <td>@product.ProductPrice</td>
+                    <td>@product.Quantity</td>
+                    <td>@product.TotalPrice</td>
+                </tr>
+                totalOrderPrice += product.TotalPrice;
+                
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@section Scripts {
+    <script>
+        $('#order-price').html('£@totalOrderPrice');
+    </script>
+}

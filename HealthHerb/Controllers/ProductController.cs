@@ -13,8 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HealthHerb.Controllers
 {
-    //[Authorize(Roles =Role.Admin)]
-    [AllowAnonymous]
+    [Authorize(Roles =Role.Admin)]
     public class ProductController : Controller
     {
         private readonly FileManager fileManager;

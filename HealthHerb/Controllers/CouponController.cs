@@ -1,6 +1,10 @@
-﻿using HealthHerb.Interface;
+﻿using HealthHerb.Authorization;
+using HealthHerb.Interface;
 using HealthHerb.Models.Product;
+using HealthHerb.Models.User;
+using HealthHerb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,15 +15,23 @@ namespace HealthHerb.Controllers
 {
     public class CouponController : Controller
     {
+        private readonly ICrud<CouponUsed> couponUsedCrud;
         private readonly ICrud<Coupon> crud;
+        private readonly UserManager<BaseUser> userManager;
 
         public CouponController
         (
-            ICrud<Coupon> crud
+            ICrud<CouponUsed> couponUsedCrud,
+            ICrud<Coupon> crud,
+            UserManager<BaseUser> userManager
         )
         {
+            this.couponUsedCrud = couponUsedCrud;
             this.crud = crud;
+            this.userManager = userManager;
         }
+
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<IActionResult> List()
         {
@@ -27,6 +39,7 @@ namespace HealthHerb.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -38,6 +51,7 @@ namespace HealthHerb.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = Role.Admin)]
         [HttpPost]
         public async Task<IActionResult> Create(Coupon model)
         {
@@ -63,6 +77,7 @@ namespace HealthHerb.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> Edit(string Id)
         {
             var record = await crud.GetById(Id);
@@ -81,6 +96,7 @@ namespace HealthHerb.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> Edit(Coupon model)
         {
             if (!ModelState.IsValid)
@@ -109,6 +125,7 @@ namespace HealthHerb.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> Delete(string id)
         {
             await crud.Delete(id);
@@ -120,8 +137,8 @@ namespace HealthHerb.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> IsCodeInUse(string Code)
         {
-            var User = await crud.GetAll(m => m.Code.Equals(Code));
-            if (User == null)
+            var user = await crud.GetFirst(m => m.Code.Equals(Code));
+            if (user == null)
             {
                 return Json(true);
             }
@@ -131,10 +148,11 @@ namespace HealthHerb.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CheckCoupon(string coupon)
+        [HttpPost]
+        public async Task<IActionResult> CheckCoupon(PrepareProductViewModel model)
         {
-            var record = await crud.GetById(m => m.Code.Contains(coupon));
+            var record = await crud.GetById(m => m.Code.Equals(model.DiscountCode));
+            var userId = userManager.GetUserId(User);
 
             if (record == null)
             {
@@ -143,9 +161,21 @@ namespace HealthHerb.Controllers
 
             if (record.ManyUsed > 0 && (DateTime.Now > record.Start || DateTime.Now < record.End))
             {
-                record.ManyUsed -= 1;
-                await crud.Update(record);
-                return Ok(new { amount = record.Amount });
+                var copupon = await couponUsedCrud.GetFirst(m => m.CouponId.Equals(record.Id) && m.BaseUserId.Equals(userId));
+                if (copupon == null)
+                {
+                    record.ManyUsed -= 1;
+                    await crud.Update(record);
+                    await couponUsedCrud.Add(new CouponUsed
+                    {
+                        BaseUserId = userId,
+                        CouponId = record.Id
+                    });
+                    model.TotalPrice = model.TotalPrice - (model.TotalPrice*(decimal)(record.Amount/100));
+                    return Ok(new { totalPrice = model.TotalPrice });
+                }
+                return BadRequest();
+               
             }
             else
             {

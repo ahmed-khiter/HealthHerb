@@ -12,65 +12,66 @@
                 <li class="active">Shopping Cart</li>
             </ol>
         </div>
-        <div class="table-responsive cart_info">
-            <table class="table table-condensed">
-                <thead>
-                    <tr class="cart_menu">
-                        <td class="image">Item</td>
-                        <td class="description"></td>
-                        <td class="price">Price</td>
-                        <td class="quantity">Quantity</td>
-                        <td class="total">Total</td>
-                        <td></td>
-                    </tr>
-                </thead>
-                @foreach (var record in Model)
-                {
-                    var price = record.Quantity * (record.Product.Price - record.Product.Price * (decimal)(record.Product.Discount / 100));
-                    totalPrice += (double)price;
-                    <tbody>
-                        <tr id="item-@record.Id">
-                            <td class="cart_product">
-                                <a href=""><img src="/uploads/@record.Product.Image" class="img-fluid" style="max-width:120px" ></a>
-                            </td>
-                            <td class="cart_description">
-                                <h4><strong>Name: </strong>@record.Product.Name</h4>
-                                <p><strong>Description: </strong>@record.Product.Description</p>
-                            </td>
-                            <td class="cart_price">
-                                @if (record.Product.Discount == 0)
-                                {
-                                    <p>@record.Product.Price</p>
-                                }
-                                else
-                                {
-                                    <del><p>@record.Product.Price</p></del>
-                                    <p>@(record.Product.Price-price)</p>
-                                }
-                            </td>
-                            <td class="cart_quantity">
-                                <div class="cart_quantity_button">
-                                    <a class="cart_quantity_up" href="/cart/increaseitem/@record.Id"> + </a>
-                                    <input class="cart_quantity_input" asp-for="@record.Quantity" disabled>
-                                    <a class="cart_quantity_down" href="/cart/decreaseitem/@record.Id" > - </a>
-                                </div>
-                            </td>
-                            <td class="cart_total">
-                                <p class="cart_total_price">@price</p>
-                            </td>
-                            <td class="cart_delete">
-                                <a data-id="@record.Id" class="cart_quantity_delete" ><i class="fa fa-times"></i></a>
-                                <input type="hidden" value="@record.Id" id="id_cart" />
-                            </td>
+        <form method="get" asp-controller="Payment" asp-action="PrepareOrder">
+
+            <table class="table table-striped">
+                    <thead style="background-color:#000;color:#FFF">
+                        <tr class="cart_menu">
+                            <td class="image">Image</td>
+                            <td class="description">Name</td>
+                            <td class="price">Price</td>
+                            <td class="quantity">Quantity</td>
+                            <td>Total</td>
+                            <td>Remove</td>
                         </tr>
-                    </tbody>
-                }
-            </table>
-            <label><strong>Total price : </strong>@totalPrice</label>
-            <form>
-                <button asp-controller="" asp-action="" >Checkout</button>
-            </form>
-        </div>
+                    </thead>
+                    @foreach (var record in Model)
+                    {
+                        var price = record.Quantity * (record.Product.Price - record.Product.Price * (decimal)(record.Product.Discount / 100));
+                        totalPrice += (double)price;
+                        <tbody>
+                            <tr id="item-@record.Id">
+                                <td class="cart_product">
+                                    <a href=""><img src="/uploads/@record.Product.Image" class="img-fluid" style="max-width:120px"></a>
+                                </td>
+                                <td class="cart_description">
+                                    @record.Product.Name
+                                </td>
+                                <td class="cart_price">
+                                    @if (record.Product.Discount == 0)
+                                    {
+                                        <p>@record.Product.Price</p>
+                                    }
+                                    else
+                                    {
+                                        <del><p>@record.Product.Price</p></del>
+                                        <p>@(record.Product.Price-price)</p>
+                                    }
+                                </td>
+                                <td class="cart_quantity">
+                                    <div class="cart_quantity_button">
+                                        <a class="cart_quantity_up" href="/cart/increaseitem/@record.Id"> + </a>
+                                        <input class="cart_quantity_input" asp-for="@record.Quantity" disabled>
+                                        <a class="cart_quantity_down" href="/cart/decreaseitem/@record.Id"> - </a>
+                                    </div>
+                                </td>
+                                <td class="cart_total">
+                                    <p class="cart_total_price">£@price</p>
+                                </td>
+                                <td>
+                                    <a data-id="@record.Id" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>
+                                    <input type="hidden" value="@record.Id" id="id_cart" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+
+            <hr />
+
+            <button class="btn btn-lg" style="background-color:#000;color:#FFF">Checkout: <strong>£@totalPrice</strong></button>
+
+        </form>
     </div>
 </section> <!--/#cart_items-->
 @section Scripts{ 

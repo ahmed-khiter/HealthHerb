@@ -1,4 +1,5 @@
 ﻿using HealthHerb.Enum;
+using HealthHerb.Models.Product;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace HealthHerb.Models.User
         public string FullName { get; set; }
         public string StripeKey { get; set; }
         public AccountType AccountType { get; set; }
+        public CouponUsed CouponUsed { get; set; }
 
     }
 }

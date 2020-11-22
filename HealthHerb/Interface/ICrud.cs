@@ -22,6 +22,7 @@ namespace HealthHerb.Interface
         Task<T> GetById(Expression<Func<T, bool>> expression);
         Task<T> GetFirst();
         Task<T> GetFirst(Expression<Func<T, bool>> expression);
+        Task<T> GetFirst(Expression<Func<T, bool>> expression, string[] models);
         Task Delete(string id);
         Task Delete(Expression<Func<T, bool>> expression);
         Task<bool> Exists(Expression<Func<T, bool>> expression);

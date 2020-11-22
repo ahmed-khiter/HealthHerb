@@ -105,6 +105,20 @@ namespace HealthHerb.Help
         {
             return await entitySet.Where(expression).FirstOrDefaultAsync();
         }
+
+        public async Task<T> GetFirst(Expression<Func<T, bool>> expression, string[] models)
+        {
+            IQueryable<T> record = entitySet;
+
+            record = record.Where(expression);
+
+            foreach (var model in models)
+            {
+                record = record.Include(model);
+            }
+
+            return await record.FirstOrDefaultAsync();
+        }
         #endregion
 
         #region Update

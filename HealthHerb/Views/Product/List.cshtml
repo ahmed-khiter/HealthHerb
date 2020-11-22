@@ -30,10 +30,10 @@
                             <strong>@record.Quantity</strong>
                             <a class="cart_quantity_down btn btn-danger" href="/product/decreaseitem/@record.Id"> - </a>
                         </td>
-                        <td class="center hidden-phone"><strong>@record.Discount</strong></td>
+                        <td class="center hidden-phone"><strong>@record.Discount%</strong></td>
                         <td class="center hidden-phone">
                             <a class="btn btn-warning" asp-controller="product" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
-                            <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id">
+                            <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id" style="display:inline">
                                 <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
                             </form>
                         </td>

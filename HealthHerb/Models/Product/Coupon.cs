@@ -27,7 +27,7 @@ namespace HealthHerb.Models.Product
 
         [Required]
         public DateTime End { get; set; }
-        public bool IsValid { get; set; }
+        public CouponUsed CouponUsed { get; set; }
 
     }
 }

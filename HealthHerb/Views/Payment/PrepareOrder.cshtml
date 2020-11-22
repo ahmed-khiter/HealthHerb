@@ -1,0 +1,177 @@
+﻿@model PrepareProductViewModel
+@inject ICrud<PaymentSetting> paymentSettingCrud
+@inject ICrud<Product> productCrud
+@{
+    ViewData["Title"] = "Check out";
+    var paymentSetting = await paymentSettingCrud.GetById("PaymentSetting");
+    int i = 0;
+    int quantity = 0;
+}
+<style>
+    .stripe-button-el {
+        border-radius: 5px!important;
+        float: right
+    }
+
+    .stripe-button-el span {
+        background: #000;
+        box-shadow: none !important;
+    }
+</style>
+<div class="container">
+    <div class="signup-form">
+        <h2><i class="fa fa-shopping-cart"></i> <strong>Checkout</strong></h2>
+
+        <form method="post" asp-controller="payment" asp-action="prepareorder" id="product-form">
+            <input type="hidden" asp-for="ShouldProcess" value="@Model.ShouldProcess" />
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="Products" />
+            <input type="hidden" asp-for="ShippingPrice" />
+            <input type="hidden" asp-for="TotalPrice" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-striped" id="hidden-table-info">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.Products)
+                            {
+                                <tr class="gradeX">
+                                    <td><img src="~/uploads/@product.Image" style="max-width:60px" /></td>
+                                    <td>@product.Name</td>
+                                    <td>@product.Price</td>
+                                    <td>@Model.Quantity[i]</td>
+                                    @(quantity += Model.Quantity[i]) 
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                    <table class="table table-striped">
+                        <tr>
+                            <td width="200"><strong>@Html.DisplayNameFor(m => m.DiscountCode)</strong></td>
+                            <td style="position:relative">
+                                <input class="form-control" asp-for="DiscountCode" style="background:#FFF"/>
+                                <button id="apply-coupon" class="btn btn-dark" type="button" style="position: absolute; top: 8px; right: 8px; height: 40px; border-top-right-radius: 7px; border-bottom-right-radius: 7px;"><i class="fa fa-check-square-o"></i> Apply</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="200"><strong>Total quantity</strong></td>
+                            <td>@quantity</td>
+                        </tr>
+                        <tr>
+                            <td width="200"><strong>Shipping cost</strong></td>
+                            <td>£@Model.ShippingPrice</td>
+                        </tr>
+                        <tr>
+                            <td width="200"><strong>Total cost</strong></td>
+                            <td><strong class="text-success">£@Model.TotalPrice</strong></td>
+                        </tr>
+                        <tr>
+                            <td width="200"><strong>Proceed to payment</strong></td>
+                            <td>
+                                <script src="https://checkout.stripe.com/checkout.js"
+                                        class="stripe-button"
+                                        data-key="@paymentSetting.PublishKey"
+                                        data-amount="@paymentSettingCrud.GetById("PaymentSetting")"
+                                        data-name="Health Herb"
+                                        data-description="Checkout total"
+                                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                        data-locale="en"
+                                        data-zip-code="true"
+                                        data-currency="GBP"
+                                        currency="GBP"
+                                        data-label="Pay Now">
+                                </script>
+                            </td>
+                        </tr>
+                    </table>                    
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="col-md-6">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" required  />
+                        <span asp-validation-for="FirstName" class ="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" required  />
+                        <span asp-validation-for="LastName" class ="text-danger"></span>
+
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" required  />
+                        <span asp-validation-for="Email" class ="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="PhoneNumber"></label>
+                        <input asp-for="PhoneNumber" required  />
+                        <span asp-validation-for="PhoneNumber" class ="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label asp-for="Address"></label>
+                        <input asp-for="Address" required  />
+                        <span asp-validation-for="Address" class ="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Country"></label>
+                        <select data-product-id="@Model.ShippingId" required  id="shipping-country" class="form-control" asp-for="Country" asp-items="@(ViewData["Countries"] as SelectList)">
+                            <option selected disabled>--Selecte country--</option>
+                        </select>
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="City"></label>
+                        <input asp-for="City" required  />
+                        <span asp-validation-for="City" class ="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="PostalCode"></label>
+                        <input asp-for="PostalCode" required  />
+                        <span asp-validation-for="PostalCode" class ="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Apartment"></label>
+                        <input asp-for="Apartment" required  />
+                        <span asp-validation-for="Apartment" class ="text-danger"></span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#shipping-country').on('change', function () {
+            $('#ShouldProcess').val('False');
+            $('#product-form').submit();
+        });
+        $('#apply-coupon').on('click', function () {
+            $('#ShouldProcess').val('False');
+            $('#product-form').submit();
+        });
+    </script>
+}

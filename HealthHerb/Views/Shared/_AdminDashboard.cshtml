@@ -17,9 +17,9 @@
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/fontawesome-iconpicker/css/fontawesome-iconpicker.css" rel="stylesheet" />
-    <link href="~/css/Dashboard-Style.css" rel="stylesheet" />
     <link href="~/css/Dashboard-Style-responsive.css" rel="stylesheet" />
     <link href="~/css/Dashboard-Table-responsive.css" rel="stylesheet" />
+    <link href="~/css/Dashboard-Style.css" rel="stylesheet" asp-append-version="true"/>
 </head>
 <body>
     <section id="container">
@@ -31,7 +31,7 @@
             </div>
 
             <!--logo start-->
-            <a asp-controller="Home" asp-action="List" class="logo"><b>Health <span>Herb</span></b></a>
+            <a asp-controller="setting" asp-action="index" class="logo"><b>Health <span>Herb</span></b></a>
             <!--logo end-->
 
             <div class="nav notify-row" id="top_menu">
@@ -53,12 +53,12 @@
             <div id="sidebar" class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
-                    <h5 class="centered">@user.FullName</h5>
+                    <h5 style="padding-left:20px">@user.FullName</h5>
 
                     <li class="mt">
-                        <a asp-controller="product" asp-action="list">
-                            <i class="fa fa-th-list"></i>
-                            <span>Product list</span>
+                        <a asp-controller="setting" asp-action="index">
+                            <i class="fa fa-desktop"></i>
+                            <span>Monitor</span>
                         </a>
                     </li>
 
@@ -66,6 +66,13 @@
                         <a asp-controller="product" asp-action="create">
                             <i class="fa fa-plus-square"></i>
                             <span>Create product</span>
+                        </a>
+                    </li>
+
+                    <li class="mt">
+                        <a asp-controller="product" asp-action="list">
+                            <i class="fa fa-th-list"></i>
+                            <span>Product list</span>
                         </a>
                     </li>
 
@@ -103,6 +110,13 @@
                             <span>Orders </span>
                         </a>
                     </li>
+
+                    <li class="mt">
+                        <a asp-controller="home" asp-action="index">
+                            <i class="fa fa-home"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -127,5 +141,6 @@
     <script src="~/lib/common-scripts.js"></script>
     <script src="~/lib/gritter-conf.js"></script>
     <script src="~/js/deleteItem.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

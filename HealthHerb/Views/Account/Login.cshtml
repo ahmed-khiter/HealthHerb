@@ -1,6 +1,6 @@
 ﻿@model LoginViewModel
 @{
-
+    ViewData["Title"] = "Login";
 }
 <div class="container">
     <div class="row">
@@ -9,6 +9,7 @@
             <div class="login-form">
                 <!--login form-->
                 <h2>Login to your account</h2>
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <form asp-controller="account" asp-action="login" method="post">
                     <label asp-for="Email"></label>
                     <input placeholder="Email address" asp-for="Email" />

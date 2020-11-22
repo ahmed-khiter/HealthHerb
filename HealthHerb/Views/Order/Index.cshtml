@@ -1,4 +1,56 @@
-﻿@model IEnumerable<Order> 
-@{ 
+﻿@model IEnumerable<Order>
+@{
     Layout = "_AdminDashboard";
+}
+
+@if (Model.Any())
+{
+    <div class="content-panel">
+        <h2>Orders</h2>
+        <div class="adv-table">
+            <table class="table table-striped" id="hidden-table-info">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in Model)
+                    {
+                        <tr class="gradeX">
+                            <td>@record.OrderNumber</td>
+                            <td>@record.CreatedAt</td>
+                            <td>@record.FirstName @record.LastName</td>
+                            <td>
+                                <form method="post" asp-controller="Order" asp-action="EditOrderStatus" style="display:inline">
+                                    <input type="hidden" name="orderId" value="@record.Id" />
+                                    <select class="form-control order-status" name="orderStatus" asp-for="@record.OrderStatus" asp-items="@Html.GetEnumSelectList(typeof(OrderStatus))"></select>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="get" asp-controller="Order" asp-action="SpecificOrder" asp-route-id="@record.Id" style="display:inline">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else { 
+<h1>you didn't make any order before</h1>
+}
+
+@section Scripts {
+    <script>
+        $('.order-status').on('change', function () {
+            $(this).parent().submit();
+        });
+    </script>
 }

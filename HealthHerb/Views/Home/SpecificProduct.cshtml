@@ -29,17 +29,16 @@
                 <h2>@Model.Description</h2>
                 <span>
                     <span>£@Model.Price</span>
-                    <label>Quantity:</label>
-                    <input type="text" value="3" />
-                    <button type="button" class="btn btn-fefault cart">
+                    <a class="btn btn-fefault cart" asp-controller="Cart" asp-action="create" asp-route-productId="@Model.Id">
                         <i class="fa fa-shopping-cart"></i>
                         Add to cart
-                    </button>
+                    </a>
+                    <a class="btn btn-fefault cart" asp-controller="home" asp-action="PrepareSingleOrder" asp-route-productId="@Model.Id" >
+                        <i class="fa fa-credit-card"></i>
+                        Buy now
+                    </a>
                 </span>
-                <p><b>Availability:</b> In Stock</p>
-                <p><b>Condition:</b> New</p>
-                <p><b>Brand:</b> E-SHOPPER</p>
-                <a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
+               
             </div><!--/product-information-->
         </div>
     </div><!--/product-details-->

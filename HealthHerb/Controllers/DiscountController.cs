@@ -1,5 +1,7 @@
-﻿using HealthHerb.Interface;
+﻿using HealthHerb.Authorization;
+using HealthHerb.Interface;
 using HealthHerb.Models.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace HealthHerb.Controllers
 {
+    [Authorize(Roles = Role.Admin)]
     public class DiscountController : Controller
     {
         private readonly ICrud<Coupon> crud;

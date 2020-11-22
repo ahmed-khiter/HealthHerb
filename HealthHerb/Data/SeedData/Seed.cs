@@ -19,6 +19,26 @@ namespace HealthHerb.Data.SeedData
             string firstName = "Emad";
             string lastName = "Ahmed";
 
+            if (!roleManager.RoleExistsAsync(Role.Admin).Result)
+            {
+                var role = new IdentityRole
+                {
+                    Name = Role.Admin
+                };
+
+                roleManager.CreateAsync(role).Wait();
+            }
+
+            if (!roleManager.RoleExistsAsync(Role.Consumer).Result)
+            {
+                var role = new IdentityRole
+                {
+                    Name = Role.Consumer
+                };
+
+                roleManager.CreateAsync(role).Wait();
+            }
+
             if (userManager.FindByEmailAsync(email).Result == null)
             {
                 var user = new BaseUser
@@ -40,16 +60,6 @@ namespace HealthHerb.Data.SeedData
 
                 if (result.Succeeded)
                 {
-                    if (!roleManager.RoleExistsAsync(Role.Admin).Result)
-                    {
-                        var role = new IdentityRole
-                        {
-                            Name = Role.Admin
-                        };
-
-                        roleManager.CreateAsync(role).Wait();
-                    }
-
                     userManager.AddToRoleAsync(user, Role.Admin).Wait();
                 }
             }
@@ -72,6 +82,14 @@ namespace HealthHerb.Data.SeedData
 
                 context.ShippingPrices.AddRangeAsync(record).Wait();
                 context.SaveChangesAsync().Wait();
+                context.PaymentManages.Add(new Models.Settings.PaymentSetting
+                {
+                    Id = "PaymentSetting",
+                    PublishKey = "here you must enter publish key to make success payment",
+                    SecretKey = "here you must enter secret key to make success payment",
+                    CreatedAt = DateTime.Now
+                });
+                context.SaveChanges();
             }
         }
     }

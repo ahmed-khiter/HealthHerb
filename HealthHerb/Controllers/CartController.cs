@@ -106,21 +106,32 @@ namespace HealthHerb.Controllers
                 var userId = userManager.GetUserId(User);
                 var productIsExists = await crud.GetById(m => m.ProductId == productId && m.UserId == userId);
 
+                decimal actuallyPrice = 0;
+              
                 if (productIsExists == null)
                 {
-                    await crud.Add(new Cart
+                    if (product.Discount > 0)
                     {
-                        ProductId = productId,
-                        Product = product,
-                        Quantity = 1,
-                        TotalPrice = product.Price,
-                        UserId = userId
-                    });
+                        actuallyPrice -= (product.Price * (decimal)(product.Discount / 100));
+                    }
+                    else
+                    {
+                        actuallyPrice = product.Price;
+                    }
+                    var productInCart = await crud.Add(new Cart
+                                        {
+                                            ProductId = productId,
+                                            Product = product,
+                                            Quantity = 1,
+                                            TotalPrice = actuallyPrice,
+                                            UserId = userId
+                                        });
                 }
                 else
                 {
+                    actuallyPrice = product.Price;
                     productIsExists.Quantity += 1;
-                    productIsExists.TotalPrice *= productIsExists.Quantity;
+                    productIsExists.TotalPrice = actuallyPrice * productIsExists.Quantity;
                     await crud.Update(productIsExists);
                 }
             }

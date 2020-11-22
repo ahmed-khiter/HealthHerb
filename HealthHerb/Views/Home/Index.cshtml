@@ -57,23 +57,20 @@
             @foreach (var record in Model)
             {
                 <div class="col-sm-3">
-                    <div class="product-image-wrapper">
+                    <div class="product-image-wrapper" onclick="location.href = '/home/SpecificProduct?productId=@record.Id'">
                         <div class="single-products">
                             <div class="productinfo text-center">
                                 <img src="/uploads/@record.Image" alt="" />
-                                <h2><strong>£@record.Price</strong></h2>
+                                <h2><strong>@record.Name</strong></h2>
                                 <p>@record.Description</p>
+                                <p>£@record.Price</p>
                                 @if (!isLogged)
                                 {
-                                    <a class="btn btn-info add-to-cart" asp-controller="home" asp-action="specificproduct" asp-route-productId="@record.Id">View product</a>
                                     <a asp-controller="account" asp-action="register" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                    <a asp-controller="account" asp-action="register" class="btn btn-primary add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
                                 }
                                 @if (isLogged)
                                 {
-                                    <a class="btn btn-info add-to-cart" asp-controller="home" asp-action="specificproduct" asp-route-productId="@record.Id">View product</a>
                                     <a asp-controller="cart" asp-action="create" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-                                    <a asp-controller="home" asp-action="PrepareSingleOrder" asp-route-productId="@record.Id" class="btn btn-default add-to-cart"><i class="fa fa-credit-card-alt"></i>Buy it now</a>
                                 }
                             </div>
 
