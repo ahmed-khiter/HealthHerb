@@ -28,6 +28,7 @@ namespace HealthHerb.Data
         public DbSet<OrderProduct> OrderProducts { get; set; }
         public DbSet<ShippingPrice> ShippingPrices { get; set; }
         public DbSet<CouponUsed> CouponUseds { get; set; }
+        public DbSet<FrontEndData> FrontEndDatas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

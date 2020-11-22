@@ -1,11 +1,15 @@
 ﻿@model IEnumerable<Product>
-@inject SignInManager<BaseUser>    signinManager
+@inject SignInManager<BaseUser> signinManager
 @inject UserManager<BaseUser> userManager
+@inject ICrud<FrontEndData> frontDataCrud
 @{
     var user = await userManager.GetUserAsync(User);
     bool isLogged = signinManager.IsSignedIn(User);
-    bool isAdmin = User.IsInRole(Role.Admin); 
+    bool isAdmin = User.IsInRole(Role.Admin);
     ViewData["Title"] = "Home Page";
+    var frontWebsite = await frontDataCrud.GetById("frontendDataSetting");
+    var header = "You have been specifically invited to buy the same product as before we have changed a few things around but everything is exactly the same as your last purchase.";
+    var text = "We have taken a great care of taking care of our customers over the last year and now we will continue to do so through our own website and to always provide you with the best prices with the quality service  07719472557 - For our eBay Customers If you are interested in buying or have any enquiries please contact our customer service number + 447719472557 via sms or WhatsApp You may receive invitation from other Contact Telephone Number, however if any direct enquiries please contact the number above for any help or questions ";
 }
 
 <div class="container">
@@ -31,23 +35,17 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="p-5 text-center" style="height:400px;background: url('https://cdn.shopify.com/s/files/1/0503/9561/1322/files/yes_720x.jpg?v=1604934788') center center no-repeat">
+            <div class="p-5 text-center" style="height:400px;background: url('@(frontWebsite==null? @"https://cdn.shopify.com/s/files/1/0503/9561/1322/files/yes_720x.jpg?v=1604934788" : $"/uploads/{frontWebsite.Image}")') center center no-repeat">
             </div>
         </div>
         <div class="col-md-6">
             <h2 class="font-weight-bold mt-0">Invitation sales from our eBay Customers</h2>
             <p>
                 <h3 class="font-weight-bold">
-                    You have been specifically invited to buy the same product as before we have changed a few things around but everything is exactly the same as your last purchase.
+                    @(frontWebsite==null? header : frontWebsite.Header)
                 </h3>
                 <br />
-                We have taken a great care of taking care of our customers over the last year and now we will continue to do so through our own website and to always provide you with the best prices with the quality service
-                <br /><br />
-                07719472557 - For our eBay Customers
-                <br /><br />
-                If you are interested in buying or have any enquiries please contact our customer service number +447719472557 via sms or WhatsApp
-                <br /><br />
-                You may receive invitation from other Contact Telephone Number, however if any direct enquiries please contact the number above for any help or questions
+                @(frontWebsite==null? text : frontWebsite.Text)                
             </p>
         </div>
     </div>

@@ -1,0 +1,52 @@
+﻿@model FrontWebsiteViewModel
+@{
+    Layout = "_AdminDashboard";
+    ViewBag.Title = "front Website";
+}
+
+
+<div class="row mt">
+    <div class="col-lg-12">
+        <h4><i class="fa fa-angle-right"></i> Create Product</h4>
+        <div class="form-panel">
+            <form class="form-horizontal style-form" enctype="multipart/form-data" method="post" asp-controller="setting" asp-action="frontwebsite">
+                <div class="form-group ">
+                    <label class="col-lg-2 control-label" asp-for="HeaderText"></label>
+                    <div class="col-lg-10">
+                        <input placeholder="Product name" asp-for="HeaderText" class="form-control">
+                        <span class="text-danger" asp-validation-for="HeaderTexts"></span>
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-lg-2 control-label" asp-for="Text"></label>
+                    <div class="col-lg-10">
+                        <input placeholder="Product quantity" asp-for="Text" class="form-control">
+                        <span class="text-danger" asp-validation-for="Text"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label" asp-for="CurrentImage"></label>
+                    <div class="col-lg-10">
+                        <img class="img-fluid" style="max-width:120px" src="~/uploads/@Model.CurrentImage" />
+                    </div>
+                </div>
+
+                <div class="form-group ">
+                    <label class="col-lg-2 control-label">New image</label>
+                    <div class="col-lg-10">
+                        <input asp-for="Image" class="form-control">
+                        <span class="text-danger" asp-validation-for="Image"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <button class="btn btn-theme" type="submit">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

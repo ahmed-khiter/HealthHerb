@@ -1,8 +1,10 @@
 ﻿using HealthHerb.Authorization;
+using HealthHerb.Help;
 using HealthHerb.Interface;
 using HealthHerb.Models;
 using HealthHerb.Models.Product;
 using HealthHerb.Models.Settings;
+using HealthHerb.ViewModels.Setting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,26 +20,33 @@ namespace HealthHerb.Controllers
     {
         private readonly ICrud<PaymentSetting> paymentManageCrud;
         private readonly ICrud<Order> orderCrud;
+        private readonly ICrud<FrontEndData> frontendDataCrud;
         private readonly ICrud<OrderProduct> orderProductCrud;
         private readonly ICrud<ShippingPrice> shippingPriceCrud;
+        private readonly FileManager fileManager;
 
         public SettingController
         (
-            ICrud<PaymentSetting> paymentManageCrud, 
+            ICrud<PaymentSetting> paymentManageCrud,
             ICrud<Order> orderCrud,
+            ICrud<FrontEndData> frontendDataCrud,
             ICrud<OrderProduct> orderProductCrud,
-            ICrud<ShippingPrice> shippingPriceCrud
+            ICrud<ShippingPrice> shippingPriceCrud,
+            FileManager fileManager
+
         )
         {
             this.paymentManageCrud = paymentManageCrud;
             this.orderCrud = orderCrud;
+            this.frontendDataCrud = frontendDataCrud;
             this.orderProductCrud = orderProductCrud;
             this.shippingPriceCrud = shippingPriceCrud;
+            this.fileManager = fileManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            var result = await orderCrud.GetAll(new string[] { "OrderProducts"});
+            var result = await orderCrud.GetAll(new string[] { "OrderProducts" });
 
             var totalResult = result.Select(m => m.OrderProducts.Select(x => x.TotalPrice).Sum()).SingleOrDefault();
             ViewData["total"] = totalResult;
@@ -68,10 +77,10 @@ namespace HealthHerb.Controllers
 
             if (payment == null)
             {
-                payment=  await paymentManageCrud.Add(new PaymentSetting
-                            {
-                                 Id = "PaymentSetting",
-                            });
+                payment = await paymentManageCrud.Add(new PaymentSetting
+                {
+                    Id = "PaymentSetting",
+                });
             }
 
             return View(payment);
@@ -91,6 +100,56 @@ namespace HealthHerb.Controllers
             await paymentManageCrud.Update(payment);
 
             return Redirect("/product/index");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> FrontWebsite()
+        {
+            var frontEndData = await frontendDataCrud.GetById("frontendDataSetting");
+
+            if (frontEndData == null)
+            {
+                frontEndData = await frontendDataCrud.Add(new FrontEndData
+                {
+                    Id = "frontendDataSetting",
+                });
+            }
+
+            var model = new FrontWebsiteViewModel()
+            {
+                Id = frontEndData.Id,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> FrontWebsite(FrontWebsiteViewModel model)
+        {
+            var record = await frontendDataCrud.GetById(model.Id);
+
+            if (record == null)
+            {
+                return View();
+            }
+
+            record.Header = model.HeaderText;
+            record.Text = model.Text;
+
+            if (model.Image == null)
+            {
+                record.Image = model.CurrentImage;
+            }
+            else
+            {
+                record.Image = fileManager.Upload(model.Image);
+                fileManager.Delete(model.CurrentImage);
+            }
+            await frontendDataCrud.Update(record);
+
+            return Redirect("/product/index");
+
         }
     }
 }

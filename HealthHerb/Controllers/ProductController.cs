@@ -115,6 +115,7 @@ namespace HealthHerb.Controllers
             else
             {
                 record.Image = fileManager.Upload(model.Image);
+                fileManager.Delete(model.CurrentImage);
             }
 
             await crud.Update(record);
