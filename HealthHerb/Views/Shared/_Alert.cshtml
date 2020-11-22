@@ -1,0 +1,22 @@
+﻿
+<div class="pt-2 pb-2">
+    @if (ViewData.ContainsKey("Success"))
+    {
+        <div class="alert alert-success">
+            <i class="fa fa-check-square-o"></i> @ViewData["Success"]
+        </div>
+    }
+
+    @if (ViewData.ContainsKey("Error"))
+    {
+        <div class="alert alert-danger">
+            <i class="fa fa-exclamation-triangle"></i> @ViewData["Error"]
+        </div>
+    }
+    @if (ViewData.ContainsKey("Invalid"))
+    {
+        <div class="alert alert-danger">
+            <i class="fa fa-exclamation-triangle"></i> @ViewData["Invalid"]
+        </div>
+    }
+</div>

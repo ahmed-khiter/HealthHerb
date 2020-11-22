@@ -28,12 +28,6 @@ namespace HealthHerb.Controllers
             this.fileManager = fileManager;
             this.crud = crud;
         }
-        
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         [HttpGet]
         public async Task<IActionResult> List()
@@ -68,7 +62,7 @@ namespace HealthHerb.Controllers
 
             await crud.Add(record);
 
-            TempData["Success"] = "Success added product";
+            ViewData["Success"] = "Success added product";
 
             return RedirectToAction(nameof(Create));
         }
@@ -120,7 +114,7 @@ namespace HealthHerb.Controllers
 
             await crud.Update(record);
 
-            TempData["Success"] = "Success operation";
+            ViewData["Success"] = "Success operation";
 
             return RedirectToAction(nameof(Edit), new { id = model.Id });
         }
@@ -129,6 +123,7 @@ namespace HealthHerb.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             await crud.Delete(id);
+            ViewData["Success"] = "Success Delete";
 
             return RedirectToAction(nameof(List));
         }
@@ -141,14 +136,17 @@ namespace HealthHerb.Controllers
             {
                 record.Quantity -= 1;
                 await crud.Update(record);
+                ViewData["Success"] = "Success delete item";
                 return RedirectToAction(nameof(List));
             }
             else
             {
                 record.Quantity -= 1;
                 await crud.Update(record);
+                ViewData["Success"] = "Success decrease item";
                 return RedirectToAction(nameof(List));
             }
+            
         }
 
         public async Task<IActionResult> IncreaseItem(string id)
@@ -156,6 +154,7 @@ namespace HealthHerb.Controllers
             var record = await crud.GetById(id);
             record.Quantity += 1;
             await crud.Update(record);
+            ViewData["Success"] = "Success increase item";
             return RedirectToAction(nameof(List));
         }
     }

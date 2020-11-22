@@ -80,7 +80,7 @@ namespace HealthHerb.Controllers
 
             await crud.Delete(id);
 
-            TempData["success"] = "Success create";
+            ViewData["success"] = "Success Delete";
 
             return Ok();
 
@@ -136,7 +136,7 @@ namespace HealthHerb.Controllers
                 }
             }
 
-            TempData["success"] = $"Product {product.Name} added to cart";
+            ViewData["success"] = $"Product {product.Name} added to cart";
 
             return Redirect("/");
         }

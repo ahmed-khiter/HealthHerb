@@ -4,22 +4,7 @@
     Layout = "_AdminDashboard";
 }
 
-<div class="pt-2 pb-2">
-    @if (TempData.ContainsKey("Success"))
-    {
-        <div class="alert alert-success">
-            <i class="fa fa-check-square-o"></i> @TempData["Success"]
-        </div>
-    }
-
-    @if (TempData.ContainsKey("Error"))
-    {
-        <div class="alert alert-danger">
-            <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
-        </div>
-    }
-</div>
-
+<partial name="~/Views/Shared/_Alert.cshtml" />
 
 <div class="row mt">
     <div class="col-lg-12">

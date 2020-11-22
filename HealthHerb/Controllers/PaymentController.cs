@@ -147,10 +147,7 @@ namespace HealthHerb.Controllers
                                 });
                                 model.TotalPrice = prepareModel.TotalPrice - (prepareModel.TotalPrice * (decimal)(record.Amount / 100) + prepareModel.ShippingPrice);
                             }
-                            else
-                            {
-                                ViewData["invalid"] = "invalid coupon or you used this coupon before ";
-                            }
+                           
                         }
                         else
                         {
@@ -161,10 +158,10 @@ namespace HealthHerb.Controllers
                     {
                         ViewData["invalid"] = "invalid coupon or you used this coupon before ";
                     }
-                   
                 }
                 prepareModel.ShouldProcess = true;
                 prepareModel.Products = products;
+                ViewData["Error"] = "Try to make fill data again something";
                 return View(prepareModel);
             }
 

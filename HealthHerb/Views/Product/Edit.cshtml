@@ -4,6 +4,8 @@
     ViewData["Title"] = "Edit Product";
 }
 
+<partial name="~/Views/Shared/_Alert.cshtml" />
+
 <div class="row mt">
     <div class="col-lg-12">
         <h4><i class="fa fa-angle-right"></i> Create Product</h4>
@@ -52,7 +54,7 @@
                 <div class="form-group">
                     <label class="col-lg-2 control-label" asp-for="CurrentImage"></label>
                     <div class="col-lg-10">
-                       <img class="img-fluid" style="max-width:120px" src="~/uploads/@Model.CurrentImage" />
+                        <img class="img-fluid" style="max-width:120px" src="~/uploads/@Model.CurrentImage" />
                     </div>
                 </div>
 

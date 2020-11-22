@@ -25,36 +25,18 @@ namespace HealthHerb.Controllers
     public class HomeController : Controller
     {
         private readonly ICrud<Models.Product.Product> productCrud;
-        private readonly ICrud<Cart> cartCrud;
-        private readonly ICrud<Models.Product.Order> orderCrud;
-        private readonly ICrud<OrderProduct> orderProductCrud;
-        private readonly ICrud<PaymentSetting> paymentSettingCrud;
-        private readonly ICrud<ShippingPrice> shippingPriceCrud;
         private readonly AppDbContext context;
-        private readonly SignInManager<BaseUser> signInManager;
         private readonly UserManager<BaseUser> userManager;
 
         public HomeController
         (
             ICrud<Models.Product.Product> productCrud,
-            ICrud<Cart> cartCrud, 
-            ICrud<Models.Product.Order> orderCrud,
-            ICrud<OrderProduct> orderProductCrud,
-            ICrud<PaymentSetting> paymentSettingCrud,
-            ICrud<ShippingPrice> shippingPriceCrud,
             AppDbContext context,
-            SignInManager<BaseUser> signInManager,
             UserManager<BaseUser> userManager
         )
         {
             this.productCrud = productCrud;
-            this.cartCrud = cartCrud;
-            this.orderCrud = orderCrud;
-            this.orderProductCrud = orderProductCrud;
-            this.paymentSettingCrud = paymentSettingCrud;
-            this.shippingPriceCrud = shippingPriceCrud;
             this.context = context;
-            this.signInManager = signInManager;
             this.userManager = userManager;
         }
 

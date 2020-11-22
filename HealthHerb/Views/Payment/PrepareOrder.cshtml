@@ -18,8 +18,12 @@
         box-shadow: none !important;
     }
 </style>
+<h1>
+    <partial name="~/Views/Shared/_Alert.cshtml" />
+</h1>
 <div class="container">
     <div class="signup-form">
+
         <h2><i class="fa fa-shopping-cart"></i> <strong>Checkout</strong></h2>
 
         <form method="post" asp-controller="payment" asp-action="prepareorder" id="product-form">
@@ -48,8 +52,8 @@
                                     <td>@product.Name</td>
                                     <td>@product.Price</td>
                                     <td>@Model.Quantity[i]</td>
-                                    @(quantity += Model.Quantity[i]) 
                                 </tr>
+                                quantity += Model.Quantity[i];
                                 i++;
                             }
                         </tbody>

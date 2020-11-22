@@ -99,7 +99,8 @@ namespace HealthHerb.Controllers
             payment.PublishKey = model.PublishKey;
             await paymentManageCrud.Update(payment);
 
-            return Redirect("/product/index");
+            ViewData["Success"] = "Success update";
+            return Redirect("/setting/index");
         }
 
 
@@ -147,8 +148,8 @@ namespace HealthHerb.Controllers
                 fileManager.Delete(model.CurrentImage);
             }
             await frontendDataCrud.Update(record);
-
-            return Redirect("/product/index");
+            ViewData["Success"] = "Success update";
+            return Redirect("/setting/index");
 
         }
     }
