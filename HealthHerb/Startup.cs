@@ -101,7 +101,7 @@ namespace HealthHerb
             var payment = paymentSettingCrud.GetById("PaymentSetting").Result;
             StripeConfiguration.ApiKey = payment.SecretKey;
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
