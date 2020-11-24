@@ -120,6 +120,7 @@ namespace HealthHerb.Controllers
             var model = new FrontWebsiteViewModel()
             {
                 Id = frontEndData.Id,
+                BigTitle = frontEndData.BigTitle,
                 CurrentImage =frontEndData.Image,
                 HeaderText = frontEndData.Header,
                 Text = frontEndData.Text
@@ -140,6 +141,7 @@ namespace HealthHerb.Controllers
 
             record.Header = model.HeaderText;
             record.Text = model.Text;
+            record.BigTitle = model.BigTitle;
 
             if (model.Image == null)
             {

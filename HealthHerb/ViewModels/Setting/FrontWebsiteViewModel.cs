@@ -9,6 +9,7 @@ namespace HealthHerb.ViewModels.Setting
     public class FrontWebsiteViewModel
     {
         public string Id { get; set; }
+        public string BigTitle { get; set; }
         public string HeaderText { get; set; }
         public string Text { get; set; }
 

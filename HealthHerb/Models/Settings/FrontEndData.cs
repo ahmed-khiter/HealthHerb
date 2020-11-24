@@ -8,6 +8,7 @@ namespace HealthHerb.Models.Settings
 {
     public class FrontEndData : Entity
     {
+        public string BigTitle { get; set; }
         public string Header { get; set; }
         public string Text { get; set; }
 

@@ -10,6 +10,7 @@
     var frontWebsite = await frontDataCrud.GetById("frontendDataSetting");
     var header = "You have been specifically invited to buy the same product as before we have changed a few things around but everything is exactly the same as your last purchase.";
     var text = "We have taken a great care of taking care of our customers over the last year and now we will continue to do so through our own website and to always provide you with the best prices with the quality service  07719472557 - For our eBay Customers If you are interested in buying or have any enquiries please contact our customer service number + 447719472557 via sms or WhatsApp You may receive invitation from other Contact Telephone Number, however if any direct enquiries please contact the number above for any help or questions ";
+    var bigTitle = "Invitation sales from our eBay Customers";
 }
 
 <div class="container">
@@ -24,7 +25,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <h2 class="font-weight-bold mt-0">Invitation sales from our eBay Customers</h2>
+            <h2 class="font-weight-bold mt-0"> @(frontWebsite==null? header : frontWebsite.Header)</h2>
             <p>
                 <h3 class="font-weight-bold">
                     @(frontWebsite==null? header : frontWebsite.Header)
@@ -43,7 +44,7 @@
                     <div class="product-image-wrapper" onclick="location.href = '/home/SpecificProduct?productId=@record.Id'">
                         <div class="single-products">
                             <div class="productinfo text-center">
-                                <img src="/uploads/@record.Image" alt="" />
+                                <img style="max-width:180px" src="/uploads/@record.Image" alt="" />
                                 <h2><strong>@record.Name</strong></h2>
                                 <p>@record.Description</p>
                                 <p>£@record.Price</p>
