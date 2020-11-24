@@ -13,6 +13,13 @@
             <form class="form-horizontal style-form" enctype="multipart/form-data" method="post" asp-controller="setting" asp-action="frontwebsite">
                 <input type="hidden" asp-for="Id" />
                 <div class="form-group ">
+                    <label class="col-lg-2 control-label" asp-for="BigTitle"></label>
+                    <div class="col-lg-10">
+                        <input placeholder="Title of home page" asp-for="BigTitle" class="form-control">
+                        <span class="text-danger" asp-validation-for="BigTitle"></span>
+                    </div>
+                </div>
+                <div class="form-group ">
                     <label class="col-lg-2 control-label" asp-for="HeaderText"></label>
                     <div class="col-lg-10">
                         <input placeholder="Title of home page" asp-for="HeaderText" class="form-control">
