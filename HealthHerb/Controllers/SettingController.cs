@@ -151,7 +151,7 @@ namespace HealthHerb.Controllers
             {
                 record.Image = fileManager.Upload(model.Image);
 
-                if(model.CurrentImage!=null)
+                if(model.CurrentImage!=null&& model.Image!=null)
                     fileManager.Delete(model.CurrentImage);
             }
             await frontendDataCrud.Update(record);
