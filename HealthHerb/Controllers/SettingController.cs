@@ -48,23 +48,23 @@ namespace HealthHerb.Controllers
         {
             var result = await orderCrud.GetAll(new string[] { "OrderProducts" });
 
-            var totalResult = result.Select(m => m.OrderProducts.Select(x => x.TotalPrice).Sum()).SingleOrDefault();
+            var totalResult = result.Select(m => m.OrderProducts.Select(x => x.TotalPrice).Sum()).Sum();
             ViewData["total"] = totalResult;
 
             var todayResult = result.Where(m => (int)(DateTime.Now - m.CreatedAt).TotalDays == 0)
                              .Select(m => m.OrderProducts
-                            .Select(x => x.TotalPrice).Sum()).SingleOrDefault();
+                            .Select(x => x.TotalPrice).Sum()).Sum();
             ViewData["today"] = totalResult;
 
             var monthResult = result.Where(m => (int)(DateTime.Now - m.CreatedAt).TotalDays == 30)
                                 .Select(m => m.OrderProducts
-                                .Select(x => x.TotalPrice).Sum()).SingleOrDefault();
+                                .Select(x => x.TotalPrice).Sum()).Sum();
             ViewData["month"] = monthResult;
 
             var lastYear = DateTime.Today.AddYears(-1);
             var yearResult = result.Where(m => m.CreatedAt >= lastYear)
                                .Select(m => m.OrderProducts
-                               .Select(x => x.TotalPrice).Sum()).SingleOrDefault();
+                               .Select(x => x.TotalPrice).Sum()).Sum();
             ViewData["year"] = yearResult;
 
             return View(result);
@@ -120,6 +120,9 @@ namespace HealthHerb.Controllers
             var model = new FrontWebsiteViewModel()
             {
                 Id = frontEndData.Id,
+                CurrentImage =frontEndData.Image,
+                HeaderText = frontEndData.Header,
+                Text = frontEndData.Text
             };
 
             return View(model);
@@ -145,7 +148,9 @@ namespace HealthHerb.Controllers
             else
             {
                 record.Image = fileManager.Upload(model.Image);
-                fileManager.Delete(model.CurrentImage);
+
+                if(model.CurrentImage!=null)
+                    fileManager.Delete(model.CurrentImage);
             }
             await frontendDataCrud.Update(record);
             ViewData["Success"] = "Success update";

@@ -11,10 +11,11 @@
         <h4><i class="fa fa-angle-right"></i> Create Product</h4>
         <div class="form-panel">
             <form class="form-horizontal style-form" enctype="multipart/form-data" method="post" asp-controller="setting" asp-action="frontwebsite">
+                <input type="hidden" asp-for="Id" />
                 <div class="form-group ">
                     <label class="col-lg-2 control-label" asp-for="HeaderText"></label>
                     <div class="col-lg-10">
-                        <input placeholder="Product name" asp-for="HeaderText" class="form-control">
+                        <input placeholder="Title of home page" asp-for="HeaderText" class="form-control">
                         <span class="text-danger" asp-validation-for="HeaderText"></span>
                     </div>
                 </div>
@@ -22,7 +23,7 @@
                 <div class="form-group ">
                     <label class="col-lg-2 control-label" asp-for="Text"></label>
                     <div class="col-lg-10">
-                        <input placeholder="Product quantity" asp-for="Text" class="form-control">
+                        <textarea placeholder="Subtitle of website" asp-for="Text" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="Text"></span>
                     </div>
                 </div>
