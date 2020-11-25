@@ -12,6 +12,7 @@ using HealthHerb.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
@@ -73,6 +74,7 @@ namespace HealthHerb
             {
                 options.AddPolicy(Policy.Admin, Policy.AdminPolicy());
             });
+            services.Configure<FormOptions>(options => options.MultipartBodyLengthLimit = long.MaxValue); // or other given limit
 
             // Dependency Injection
             services.AddScoped<AppDbContext>();
