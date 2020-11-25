@@ -3,71 +3,79 @@
     ViewData["Title"] = "history";
 }
 
-<div class="container">
-    <h1><i class="fa fa-clock-o"></i> Order history</h1>
+@if (Model.Any())
+{
+    <div class="container">
+        <h1><i class="fa fa-clock-o"></i> Order history</h1>
 
-    <hr />
+        <hr />
 
-    <table class="table table-striped">
-        <thead style="background-color:#000;color:#FFF">
-            <tr>
-                <th>Order No.</th>
-                <th>Status</th>
-                <th>Created At</th>
-                <th>No. of products</th>
-                <td>Total</td>
-                <td>Products</td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var record in Model)
-            {
+        <table class="table table-striped">
+            <thead style="background-color:#000;color:#FFF">
                 <tr>
-                    <td>@record.OrderNumber</td>
-                    <td>@record.OrderStatus</td>
-                    <td>@record.CreatedAt</td>
-                    <td>@record.OrderProducts.Count</td>
-                    <td>@record.OrderProducts.Sum(m => m.TotalPrice)</td>
-                    <td>
-                        <button class="btn btn-info" data-toggle="modal" data-target="#order-@record.Id"><i class="fa fa-eye"></i> View</button>
+                    <th>Order No.</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>No. of products</th>
+                    <td>Total</td>
+                    <td>Products</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    <tr>
+                        <td>@record.OrderNumber</td>
+                        <td>@record.OrderStatus</td>
+                        <td>@record.CreatedAt</td>
+                        <td>@record.OrderProducts.Count</td>
+                        <td>@record.OrderProducts.Sum(m => m.TotalPrice)</td>
+                        <td>
+                            <button class="btn btn-info" data-toggle="modal" data-target="#order-@record.Id"><i class="fa fa-eye"></i> View</button>
 
-                        <div class="modal fade" id="order-@record.Id">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Image</th>
-                                                    <th>Name</th>
-                                                    <th>Price</th>
-                                                    <th>Qt.</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach(var product in record.OrderProducts)
-                                                {
+                            <div class="modal fade" id="order-@record.Id">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <table class="table table-striped">
+                                                <thead>
                                                     <tr>
-                                                        <td>
-                                                            <img src="/uploads/@product.Product.Image" style="width:60px" />
-                                                        </td>
-                                                        <td>@product.Product.Name</td>
-                                                        <td>@product.ProductPrice</td>
-                                                        <td>@product.Quantity</td>
-                                                        <td>@product.TotalPrice</td>
+                                                        <th>Image</th>
+                                                        <th>Name</th>
+                                                        <th>Price</th>
+                                                        <th>Qt.</th>
+                                                        <th>Total</th>
                                                     </tr>
-                                                }
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var product in record.OrderProducts)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <img src="/uploads/@product.Product.Image" style="width:60px" />
+                                                            </td>
+                                                            <td>@product.Product.Name</td>
+                                                            <td>@product.ProductPrice</td>
+                                                            <td>@product.Quantity</td>
+                                                            <td>@product.TotalPrice</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+else
+{
+    <h1>Empty order history</h1>
+}

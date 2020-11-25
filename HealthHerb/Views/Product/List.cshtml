@@ -5,42 +5,49 @@
 
 }
 
-<div class="content-panel">
-    <div class="adv-table">
-        <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="hidden-table-info">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Name</th>
-                    <th class="hidden-phone">Price</th>
-                    <th class="hidden-phone">Quantity</th>
-                    <th class="hidden-phone">discount</th>
-                    <th class="hidden-phone">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var record in Model)
-                {
-                    <tr class="gradeX">
-                        <td><img style="max-width:100px" src="~/uploads/@record.Image" /></td>
-                        <td>@record.Name</td>
-                        <td class="hidden-phone">£@record.Price</td>
-                        <td class="center hidden-phone">
-                            <a class="cart_quantity_up btn btn-success" href="/product/increaseitem/@record.Id"> + </a>
-                            <strong>@record.Quantity</strong>
-                            <a class="cart_quantity_down btn btn-danger" href="/product/decreaseitem/@record.Id"> - </a>
-                        </td>
-                        <td class="center hidden-phone"><strong>@record.Discount%</strong></td>
-                        <td class="center hidden-phone">
-                            <a class="btn btn-warning" asp-controller="product" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
-                            <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id" style="display:inline">
-                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
-                            </form>
-                        </td>
+@if (Model.Any())
+{
+    <div class="content-panel">
+        <div class="adv-table">
+            <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="hidden-table-info">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th class="hidden-phone">Price</th>
+                        <th class="hidden-phone">Quantity</th>
+                        <th class="hidden-phone">discount</th>
+                        <th class="hidden-phone">Action</th>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (var record in Model)
+                    {
+                        <tr class="gradeX">
+                            <td><img style="max-width:100px" src="~/uploads/@record.Image" /></td>
+                            <td>@record.Name</td>
+                            <td class="hidden-phone">£@record.Price</td>
+                            <td class="center hidden-phone">
+                                <a class="cart_quantity_up btn btn-success" href="/product/increaseitem/@record.Id"> + </a>
+                                <strong>@record.Quantity</strong>
+                                <a class="cart_quantity_down btn btn-danger" href="/product/decreaseitem/@record.Id"> - </a>
+                            </td>
+                            <td class="center hidden-phone"><strong>@record.Discount%</strong></td>
+                            <td class="center hidden-phone">
+                                <a class="btn btn-warning" asp-controller="product" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
+                                <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id" style="display:inline">
+                                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <h1>You don't create product yet </h1>
+}
