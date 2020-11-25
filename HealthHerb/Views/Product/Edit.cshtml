@@ -11,6 +11,7 @@
         <h4><i class="fa fa-angle-right"></i> Edit Product</h4>
         <div class="form-panel">
             <form class="form-horizontal style-form" enctype="multipart/form-data" method="post" asp-controller="product" asp-action="edit">
+                <input type="hidden" asp-for="CurrentImage" />
                 <div class="form-group ">
                     <label class="col-lg-2 control-label" asp-for="Name"></label>
                     <div class="col-lg-10">
