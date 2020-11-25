@@ -4,9 +4,10 @@
     ViewData["Title"] = "Edit Shipping";
 }
 
+<partial name="~/Views/Shared/_Alert.cshtml" />
 <div class="row mt">
     <div class="col-lg-12">
-        <h4><i class="fa fa-angle-right"></i> Create Product</h4>
+        <h4><i class="fa fa-truck"></i> Edit Shipping Price</h4>
         <div class="form-panel">
             <form class="form-horizontal style-form" enctype="multipart/form-data" method="post" asp-controller="shippingprice" asp-action="Edit">
                 <input type="hidden" asp-for="Id" />
