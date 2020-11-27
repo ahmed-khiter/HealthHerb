@@ -18,21 +18,24 @@ namespace HealthHerb.Controllers
     {
         private readonly FileManager fileManager;
         private readonly ICrud<Product> crud;
+        private readonly ICrud<Image> imageCrud;
 
         public ProductController
         (
             FileManager fileManager,
-            ICrud<Product> crud
+            ICrud<Product> crud,
+             ICrud<Image> imageCrud
         )
         {
             this.fileManager = fileManager;
             this.crud = crud;
+            this.imageCrud = imageCrud;
         }
 
         [HttpGet]
         public async Task<IActionResult> List()
         {
-            var model = await crud.GetAll();
+            var model = await crud.GetAll(new string[] { "Images"});
             return View(model);
         }
 
@@ -57,10 +60,11 @@ namespace HealthHerb.Controllers
                 Price = model.Price,
                 Discount = model.Discount,
                 Quantity = model.Quantity, 
-                Image = fileManager.Upload(model.Image),
             };
 
             await crud.Add(record);
+
+            await CreateImage(record.Id, model.Images);
 
             ViewData["Success"] = "Success added product";
 
@@ -70,7 +74,8 @@ namespace HealthHerb.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string Id)
         {
-            var record = await crud.GetById(Id);
+            var record = await crud.GetById(Id, new string[] { "Images" });
+            var images = await imageCrud.GetAll(img => img.ProductId.Equals(Id));
 
             var model = new ProductViewModel()
             {
@@ -80,8 +85,16 @@ namespace HealthHerb.Controllers
                 Price = record.Price,
                 Discount = record.Discount,
                 Quantity = record.Quantity,
-                CurrentImage = record.Image
             };
+
+            foreach (var image in images)
+            {
+                model.CurrentImages.Add(new ImageViewModel
+                {
+                    ImageId = image.Id,
+                    CurrentImage = image.Name,
+                });
+            }
 
             return View(model);
         }
@@ -101,18 +114,9 @@ namespace HealthHerb.Controllers
             record.Price = model.Price;
             record.Discount = model.Discount;
             record.Quantity = model.Quantity;
-
-            if (model.Image == null)
-            {
-                record.Image = model.CurrentImage;
-            }
-            else
-            {
-                record.Image = fileManager.Upload(model.Image);
-                fileManager.Delete(model.CurrentImage);
-            }
-
             await crud.Update(record);
+
+            await UpdateImage(model.CurrentImages, record.Id);
 
             ViewData["Success"] = "Success operation";
 
@@ -122,10 +126,18 @@ namespace HealthHerb.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
+            await DeleteImage(id);
             await crud.Delete(id);
             ViewData["Success"] = "Success Delete";
 
             return RedirectToAction(nameof(List));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePhoto(string id)
+        {
+            await imageCrud.Delete(id);
+            return Ok();
         }
 
         public async Task<IActionResult> DecreaseItem(string id)
@@ -156,6 +168,77 @@ namespace HealthHerb.Controllers
             await crud.Update(record);
             ViewData["Success"] = "Success increase item";
             return RedirectToAction(nameof(List));
+        }
+
+        private async Task UpdateImage(List<ImageViewModel> images, string productId)
+        {
+            foreach (var image in images)
+            {
+                if (image.ImageId == null)
+                {
+                    if (image.NewImage != null)
+                    {
+                        var newRecord = new Image
+                        {
+                            Name = fileManager.Upload(image.NewImage),
+                            ProductId = productId
+                        };
+
+                        await imageCrud.Add(newRecord);
+                    }
+
+                    continue;
+                }
+
+                var record = await imageCrud.GetById(image.ImageId);
+
+                if (image.NewImage != null)
+                {
+                    fileManager.Delete(record.Name);
+                    record.Name = fileManager.Upload(image.NewImage);
+                    await imageCrud.Update(record);
+                }
+            }
+        }
+
+        private async Task DeleteImage(string productId)
+        {
+            var images = await imageCrud.GetAll(img => img.ProductId.Equals(productId));
+
+            foreach (var image in images)
+            {
+                fileManager.Delete(image.Name);
+            }
+
+            await imageCrud.Delete(img => img.ProductId.Equals(productId));
+        }
+
+        private async Task CreateImage(string productId, List<IFormFile> images)
+        {
+            if (productId == null)
+            {
+                return;
+            }
+
+            string image = "noimage.jpg";
+
+            if (images == null)
+            {
+                await imageCrud.Add(new Image
+                {
+                    Name = image,
+                    ProductId = productId,
+                });
+            }
+
+            for (int i = 0; i < images.Count; i++)
+            {
+                await imageCrud.Add(new Image
+                {
+                    Name = fileManager.Upload(images[i]),
+                    ProductId = productId,
+                });
+            }
         }
     }
 }

@@ -138,7 +138,7 @@ namespace HealthHerb.Controllers
 
             ViewData["success"] = $"Product {product.Name} added to cart";
 
-            return Redirect("/");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

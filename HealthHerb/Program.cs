@@ -17,26 +17,7 @@ namespace HealthHerb
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-
-            Task.Run(async () =>
-            {
-                using var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
-                var context = scope.ServiceProvider.GetService<AppDbContext>().Database;
-                await context.MigrateAsync();
-            }).Wait();
-
-            host.Run();
-        }
-
-        public class AppDbFactory : IDesignTimeDbContextFactory<AppDbContext>
-        {
-            public AppDbContext CreateDbContext(string[] args)
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-                optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("HealthHerb"));
-                return new AppDbContext(optionsBuilder.Options);
-            }
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

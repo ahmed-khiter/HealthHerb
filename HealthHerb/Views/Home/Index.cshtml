@@ -16,7 +16,7 @@
 <div class="container">
 
     <div class="text-center">
-        <img src="~/images/logo.png" alt="Alternate Text" />
+        <img style="width:500px" src="~/images/logo.jpeg" alt="Alternate Text" />
     </div>
    <partial name="~/Views/Shared/_Alert.cshtml"/>
     <div class="row">
@@ -41,10 +41,38 @@
             @foreach (var record in Model)
             {
                 <div class="col-sm-3">
-                    <div class="product-image-wrapper" onclick="location.href = '/home/SpecificProduct?productId=@record.Id'">
+                    <div class="product-image-wrapper" >
                         <div class="single-products">
                             <div class="productinfo text-center">
-                                <img style="max-width:180px" src="/uploads/@record.Image" alt="" />
+                                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                    <!-- Wrapper for slides -->
+                                    <div class="carousel-inner">
+                                        @{
+                                            int idx = 0;
+                                        }
+                                        @foreach (var image in record.Images)
+                                        {
+                                            <div class="item @(idx == 0 ? "active" : string.Empty)" style="height:200px">
+                                                <img src="/uploads/@image.Name" class="img-fluid" style="max-height:500px" />
+                                            </div>
+                                            idx++;
+                                        }
+                                        @{ 
+                                            idx = 0;
+                                        }
+
+                                    </div>
+                                    <!-- Left and right controls -->
+                                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+
                                 <h2><strong>@record.Name</strong></h2>
                                 <p>@record.Description</p>
                                 <p>£@record.Price</p>

@@ -34,7 +34,16 @@
                         <tbody>
                             <tr id="item-@record.Id">
                                 <td class="cart_product">
-                                    <a href=""><img src="/uploads/@record.Product.Image" class="img-fluid" style="max-width:120px"></a>
+                                    @{
+                                        int idx = 0;
+                                    }
+                                    @foreach (var image in record.Product.Images)
+                                    {
+                                        <div>
+                                            <a href=""><img src="/uploads/@image.Name" class="img-fluid" style="max-width:120px"></a>
+                                        </div>
+                                        idx++;
+                                    }
                                 </td>
                                 <td class="cart_description">
                                     @record.Product.Name

@@ -43,19 +43,19 @@ namespace HealthHerb.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var model = await productCrud.GetAll();
+            var model = await productCrud.GetAll(m=>m.Quantity>0 , new string[] { "Images" });
             return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> SpecificProduct(string productId)
         {
-            var model = await productCrud.GetById(productId);
+            var model = await productCrud.GetById(productId, new string[] { "Images" } );
             return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> OrderHistory()
+        public IActionResult OrderHistory()
         {
             var userId = userManager.GetUserId(User);
             var model = context.Orders

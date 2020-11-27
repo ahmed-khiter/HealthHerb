@@ -10,7 +10,7 @@ namespace HealthHerb.Models.Product
     public class Product : Entity
     {
         public string Name { get; set; }
-        public string Image { get; set; }
+        public ICollection<Image> Images { get; set; }
         public int Quantity { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]

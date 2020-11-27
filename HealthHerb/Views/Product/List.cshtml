@@ -23,23 +23,51 @@
                 <tbody>
                     @foreach (var record in Model)
                     {
-                        <tr class="gradeX">
-                            <td><img style="max-width:100px" src="~/uploads/@record.Image" /></td>
-                            <td>@record.Name</td>
-                            <td class="hidden-phone">£@record.Price</td>
-                            <td class="center hidden-phone">
-                                <a class="cart_quantity_up btn btn-success" href="/product/increaseitem/@record.Id"> + </a>
-                                <strong>@record.Quantity</strong>
-                                <a class="cart_quantity_down btn btn-danger" href="/product/decreaseitem/@record.Id"> - </a>
-                            </td>
-                            <td class="center hidden-phone"><strong>@record.Discount%</strong></td>
-                            <td class="center hidden-phone">
-                                <a class="btn btn-warning" asp-controller="product" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
-                                <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id" style="display:inline">
-                                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr class="gradeX">
+                        <td>
+                            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner">
+                                    @{
+                                        int idx = 0;
+                                    }
+                                    @foreach (var image in record.Images)
+                                    {
+                                        <div class="item @(idx == 0 ? "active" : string.Empty)" style="height:200px">
+                                            <img src="/uploads/@image.Name" class="img-fluid" style="max-height:100px" />
+                                        </div>
+                                        idx++;
+                                    }
+                                </div>
+                                @{ 
+                                    idx = 0; 
+                                }
+                                <!-- Left and right controls -->
+                                <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </td>
+                        <td>@record.Name</td>
+                        <td class="hidden-phone">£@record.Price</td>
+                        <td class="center hidden-phone">
+                            <a class="cart_quantity_up btn btn-success" href="/product/increaseitem/@record.Id"> + </a>
+                            <strong>@record.Quantity</strong>
+                            <a class="cart_quantity_down btn btn-danger" href="/product/decreaseitem/@record.Id"> - </a>
+                        </td>
+                        <td class="center hidden-phone"><strong>@record.Discount%</strong></td>
+                        <td class="center hidden-phone">
+                            <a class="btn btn-warning" asp-controller="product" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
+                            <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id" style="display:inline">
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
+                            </form>
+                        </td>
+                    </tr>
                     }
 
                 </tbody>

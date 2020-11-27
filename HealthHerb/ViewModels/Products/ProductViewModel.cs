@@ -9,6 +9,10 @@ namespace HealthHerb.ViewModels.Products
 {
     public class ProductViewModel
     {
+        public ProductViewModel()
+        {
+            CurrentImages = new List<ImageViewModel>();
+        }
         public string Id { get; set; }
 
         [Required]
@@ -25,9 +29,9 @@ namespace HealthHerb.ViewModels.Products
         [Display(Name="Discount by percentage")]
         public float Discount { get; set; } = 0;
 
-        public string CurrentImage { get; set; }
+        public List<ImageViewModel> CurrentImages { get; set; }
 
-        [Display(Name = "Product image")]
-        public IFormFile Image { get; set; }
+        [Display(Name = "Add collection of images")]
+        public List<IFormFile> Images { get; set; }
     }
 }

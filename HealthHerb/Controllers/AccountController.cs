@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HealthHerb.Authorization;
+using HealthHerb.Models;
 using HealthHerb.Models.User;
 using HealthHerb.ViewModels.Accounts;
 using Microsoft.AspNetCore.Authorization;
@@ -69,6 +70,7 @@ namespace HealthHerb.Controllers
                 FirstName = model.FirstName, 
                 LastName = model.LastName ,
                 EmailConfirmed = true,
+                Address = model.Address
             };
 
             var result = await userManager.CreateAsync(user, model.Password);

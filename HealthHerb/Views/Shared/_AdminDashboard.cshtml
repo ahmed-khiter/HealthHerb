@@ -12,7 +12,7 @@
     <meta name="description" content="">
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
-    <title>Health Herb</title>
+    <title>Your Herbal</title>
     <!--bootstrap-->
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/font-awesome.min.css" rel="stylesheet" />
@@ -31,7 +31,7 @@
             </div>
 
             <!--logo start-->
-            <a asp-controller="setting" asp-action="index" class="logo"><b>Health <span>Herb</span></b></a>
+            <a asp-controller="setting" asp-action="index" class="logo"><b>Your <span>Herbal</span></b></a>
             <!--logo end-->
 
             <div class="nav notify-row" id="top_menu">
@@ -53,7 +53,7 @@
             <div id="sidebar" class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
-                    <h5 style="padding-left:20px">@user.FullName</h5>
+                    <h5 style="padding-left:20px">Your Herbal</h5>
 
                     <li class="mt">
                         <a asp-controller="setting" asp-action="index">
@@ -108,6 +108,13 @@
                         <a asp-controller="Order" asp-action="index">
                             <i class="fa fa-shopping-cart"></i>
                             <span>Orders </span>
+                        </a>
+                    </li>
+
+                    <li class="mt">
+                        <a asp-controller="setting" asp-action="customers">
+                            <i class="fa fa-users"></i>
+                            <span>customers</span>
                         </a>
                     </li>
 

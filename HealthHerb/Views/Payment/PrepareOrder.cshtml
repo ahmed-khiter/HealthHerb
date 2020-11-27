@@ -48,7 +48,13 @@
                             @foreach (var product in Model.Products)
                             {
                                 <tr class="gradeX">
-                                    <td><img src="~/uploads/@product.Image" style="max-width:60px" /></td>
+                                    <td>
+                                        @foreach (var image in product.Images)
+                                        {
+                                            <img src="~/uploads/@image.Name" style="max-width:60px" />
+
+                                        }
+                                    </td>
                                     <td>@product.Name</td>
                                     <td>@product.Price</td>
                                     <td>@Model.Quantity[i]</td>

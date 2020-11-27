@@ -14,6 +14,10 @@ body {
 ul li {
     list-style: none;
 }
+.carousel-inner > .item > img {
+    width: 600px !important; 
+    height: 200px !important;
+}
 
 a:hover {
     outline: none;

@@ -4,7 +4,6 @@
     var user = await userManager.GetUserAsync(User);
     bool isLogged = signinManager.IsSignedIn(User);
     bool isAdmin = User.IsInRole(Role.Admin);
-    var i = 5;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +19,7 @@
     <link href="/css/animate.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet" asp-append-version="true">
     <link href="/css/responsive.css" rel="stylesheet">
-    <title>@ViewData["Title"] - HealthHerb</title>
+    <title>@ViewData["Title"] - Your Herbal</title>
 </head>
 <body>
     <header id="header">
@@ -31,7 +30,7 @@
                 <div class="row">
                     <div class="col-md-4 clearfix">
                         <div class="logo pull-left">
-                            <a asp-controller="home" asp-action="index"><img src="~/images/logo.png" style="width:60px" /></a>
+                            <a asp-controller="home" asp-action="index"><img src="~/images/logo.jpeg" style="width:60px" /></a>
                         </div>
                     </div>
                     <div class="col-md-8 clearfix">
@@ -67,9 +66,9 @@
 
     @RenderBody()
     <script src="~/js/jquery.js"></script>
-    <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+    @*<script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>*@
     <script src="~/fontawesome-iconpicker/js/fontawesome-iconpicker.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     @RenderSection("Scripts", required: false)

@@ -2,6 +2,7 @@
 @{
     Layout = "_AdminDashboard";
     ViewData["Title"] = "Edit Product";
+    int idx = 0;
 }
 
 <partial name="~/Views/Shared/_Alert.cshtml" />
@@ -11,7 +12,7 @@
         <h4><i class="fa fa-angle-right"></i> Edit Product</h4>
         <div class="form-panel">
             <form class="form-horizontal style-form" enctype="multipart/form-data" method="post" asp-controller="product" asp-action="edit">
-                <input type="hidden" asp-for="CurrentImage" />
+                <input type="hidden" asp-for="CurrentImages" />
                 <div class="form-group ">
                     <label class="col-lg-2 control-label" asp-for="Name"></label>
                     <div class="col-lg-10">
@@ -51,28 +52,93 @@
                         <span class="text-danger" asp-validation-for="Discount"></span>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label class="col-lg-2 control-label" asp-for="CurrentImage"></label>
-                    <div class="col-lg-10">
-                        <img class="img-fluid" style="max-width:120px" src="~/uploads/@Model.CurrentImage" />
-                    </div>
-                </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="images">
+                            @for (int i = 0; i < Model.CurrentImages.Count; i++)
+                            {
+                                idx++;
+                                var img = Model.CurrentImages[i];
+                                <tr id="img-@img.ImageId">
+                                    <td><img src="~/uploads/@img.CurrentImage" style="width:120px" /></td>
+                                    <td>
+                                        <input type="hidden" name="CurrentImages[@i].ImageId" value="@img.ImageId" />
+                                        <input name="CurrentImages[@i].NewImage" type="file" />
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger del" type="button" data-id="@img.ImageId" data-is-js="0">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
 
-                <div class="form-group ">
-                    <label class="col-lg-2 control-label">New image</label>
-                    <div class="col-lg-10">
-                        <input asp-for="Image" class="form-control">
-                        <span class="text-danger" asp-validation-for="Image"></span>
-                    </div>
-                </div>
+                    <button class="btn btn-success add" type="button">
+                        <i class="fa fa-plus"></i>
+                        Add image
+                    </button>
 
-                <div class="form-group">
-                    <div class="col-lg-offset-2 col-lg-10">
-                        <button class="btn btn-theme" type="submit">Update</button>
-                    </div>
                 </div>
+                <button class="btn btn-primary">Save</button>
             </form>
         </div>
     </div>
 </div>
+
+
+@section Scripts{
+    <script>
+        var idx = @idx;
+        $('.add').on('click', function () {
+            $('#images').append(`
+                <tr id="img-${idx}">
+                    <td></td>
+                    <td>
+                        <input name="CurrentImages[${idx}].NewImage" type="file" />
+                    </td>
+                    <td>
+                        <button class="btn btn-danger del" data-is-js="1" data-id="${idx}">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            `);
+        });
+
+        $('body').on('click', '.del', function () {
+            var id = $(this).attr('data-id');
+            if ($(this).attr('data-is-js') == '1') {
+                $('#img-' + id).remove();
+                return false;
+            }
+
+            if (!confirm("are you sure you want to delete?")) {
+                return false;
+            }
+
+            $.ajax({
+                method: 'POST',
+                url: '/product/DeletePhoto',
+                data: {
+                    id
+                },
+                success: function () {
+                    $('#img-' + id).remove();
+                },
+                error: function () {
+                    alert("there are some error");
+                }
+            })
+        });
+
+    </script>
+}

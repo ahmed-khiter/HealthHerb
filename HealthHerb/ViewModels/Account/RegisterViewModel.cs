@@ -29,6 +29,9 @@ namespace HealthHerb.ViewModels.Accounts
         [DataType(DataType.Password),Display(Name ="Confirm password"),Compare(nameof(Password))]
         public string ConfirmPassword { get; set; }
 
+        [Required]
+        public string Address { get; set; }
+
         public AccountType AccountType { get; set; }
     }
 }

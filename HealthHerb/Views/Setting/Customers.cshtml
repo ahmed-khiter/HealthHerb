@@ -1,0 +1,51 @@
+﻿@model IEnumerable<BaseUser>
+@inject UserManager<BaseUser> userManager
+@{
+    Layout = "_AdminDashboard";
+    ViewBag.Title = "Customers";
+
+}
+
+@if (Model.Any())
+{
+    <div class="content-panel">
+        <div class="adv-table">
+            <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="hidden-table-info">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Show orders</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var record in Model)
+                    {
+                        var userInRole = await userManager.IsInRoleAsync(record, Role.Admin);
+                        if (!userInRole)
+                        {
+                            <tr class="gradeX">
+                                <td>@record.FullName</td>
+                                <td>@record.Email</td>
+                                <td>@record.PhoneNumber</td>
+                                <td>@record.Address</td>
+                                <td>
+                                    <form asp-controller="setting" asp-action="" asp-route-id="@record.Id">
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <h1>No customers make account yet </h1>
+}

@@ -52,7 +52,17 @@
                                                     {
                                                         <tr>
                                                             <td>
-                                                                <img src="/uploads/@product.Product.Image" style="width:60px" />
+                                                                @{ 
+                                                                    int idx = 0;
+                                                                }
+                                                                @foreach (var image in product.Product.Images)
+                                                                {
+                                                                      <div class="carousel-item @(idx == 0 ? "active" : string.Empty)">
+                                                                            <img src="/uploads/@image.Name" style="width:60px" />
+                                                                      </div>
+                                                                    idx++;
+                                                                }
+                                                                
                                                             </td>
                                                             <td>@product.Product.Name</td>
                                                             <td>@product.ProductPrice</td>

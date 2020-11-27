@@ -1,12 +1,15 @@
 ﻿using HealthHerb.Authorization;
+using HealthHerb.Data;
 using HealthHerb.Help;
 using HealthHerb.Interface;
 using HealthHerb.Models;
 using HealthHerb.Models.Product;
 using HealthHerb.Models.Settings;
+using HealthHerb.Models.User;
 using HealthHerb.ViewModels.Setting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +26,7 @@ namespace HealthHerb.Controllers
         private readonly ICrud<FrontEndData> frontendDataCrud;
         private readonly ICrud<OrderProduct> orderProductCrud;
         private readonly ICrud<ShippingPrice> shippingPriceCrud;
+        private readonly AppDbContext context;
         private readonly FileManager fileManager;
 
         public SettingController
@@ -32,6 +36,7 @@ namespace HealthHerb.Controllers
             ICrud<FrontEndData> frontendDataCrud,
             ICrud<OrderProduct> orderProductCrud,
             ICrud<ShippingPrice> shippingPriceCrud,
+            AppDbContext context,
             FileManager fileManager
 
         )
@@ -41,6 +46,7 @@ namespace HealthHerb.Controllers
             this.frontendDataCrud = frontendDataCrud;
             this.orderProductCrud = orderProductCrud;
             this.shippingPriceCrud = shippingPriceCrud;
+            this.context = context;
             this.fileManager = fileManager;
         }
 
@@ -51,21 +57,23 @@ namespace HealthHerb.Controllers
             var totalResult = result.Select(m => m.OrderProducts.Select(x => x.TotalPrice).Sum()).Sum();
             ViewData["total"] = totalResult;
 
-            var todayResult = result.Where(m => (int)(DateTime.Now - m.CreatedAt).TotalDays == 0)
+            var today = DateTime.Now.AddDays(-1);
+            var todayResult = result.Where(m => m.CreatedAt>=today)
                              .Select(m => m.OrderProducts
                             .Select(x => x.TotalPrice).Sum()).Sum();
             ViewData["today"] = totalResult;
 
-            var monthResult = result.Where(m => (int)(DateTime.Now - m.CreatedAt).TotalDays == 30)
+            var lastWeek = DateTime.Now.AddDays(-7);
+            var monthResult = result.Where(m =>m.CreatedAt>=lastWeek)
                                 .Select(m => m.OrderProducts
                                 .Select(x => x.TotalPrice).Sum()).Sum();
-            ViewData["month"] = monthResult;
+            ViewData["week"] = monthResult;
 
-            var lastYear = DateTime.Today.AddYears(-1);
-            var yearResult = result.Where(m => m.CreatedAt >= lastYear)
+            var lastMonth = DateTime.Now.AddMonths(-1);
+            var yearResult = result.Where(m => m.CreatedAt >= lastMonth)
                                .Select(m => m.OrderProducts
                                .Select(x => x.TotalPrice).Sum()).Sum();
-            ViewData["year"] = yearResult;
+            ViewData["month"] = yearResult;
 
             return View(result);
         }
@@ -157,7 +165,13 @@ namespace HealthHerb.Controllers
             await frontendDataCrud.Update(record);
             ViewData["Success"] = "Success update";
             return Redirect("/setting/index");
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> Customers()
+        {
+            var record = await context.Users.ToListAsync();
+            return View(record);
         }
     }
 }

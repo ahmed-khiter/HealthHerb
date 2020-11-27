@@ -267,7 +267,7 @@ namespace HealthHerb.Data.SeedData
                 {
                     record.Add(new ShippingPrice
                     {
-                        Country = country,
+                        Country = country.Trim(),
                         Price =0,
                     });
                 }
