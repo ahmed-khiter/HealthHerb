@@ -52,41 +52,21 @@
                         <span class="text-danger" asp-validation-for="Discount"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
-                            </tr>
-                        </thead>
-                        <tbody id="images">
-                            @for (int i = 0; i < Model.CurrentImages.Count; i++)
-                            {
-                                idx++;
-                                var img = Model.CurrentImages[i];
-                                <tr id="img-@img.ImageId">
-                                    <td><img src="~/uploads/@img.CurrentImage" style="width:120px" /></td>
-                                    <td>
-                                        <input type="hidden" name="CurrentImages[@i].ImageId" value="@img.ImageId" />
-                                        <input name="CurrentImages[@i].NewImage" type="file" />
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger del" type="button" data-id="@img.ImageId" data-is-js="0">
-                                            <i class="fa fa-trash-o"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                    <button class="btn btn-success add" type="button">
-                        <i class="fa fa-plus"></i>
-                        Add image
-                    </button>
-
+                <div class="form-group ">
+                    <label class="col-lg-2 control-label" asp-for="Images"></label>
+                    <div class="col-lg-10">
+                        <input placeholder="discount of product by salary" asp-for="Images" class="form-control">
+                        <span class="text-danger" asp-validation-for="Images"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach (var image in Model.CurrentImages)
+                    {
+                        <div class="col-md-6" style="margin-bottom:25px" id="@image.ImageId">
+                            <img src="~/uploads/@image.CurrentImage" style="width:200px" class="img-fluid img-thumbnail" />
+                            <button data-id="@image.ImageId" class="del-img btn btn-danger" type="button"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                    }
                 </div>
                 <button class="btn btn-primary">Save</button>
             </form>
@@ -94,51 +74,25 @@
     </div>
 </div>
 
-
-@section Scripts{
+@section Scripts {
     <script>
-        var idx = @idx;
-        $('.add').on('click', function () {
-            $('#images').append(`
-                <tr id="img-${idx}">
-                    <td></td>
-                    <td>
-                        <input name="CurrentImages[${idx}].NewImage" type="file" />
-                    </td>
-                    <td>
-                        <button class="btn btn-danger del" data-is-js="1" data-id="${idx}">
-                            <i class="fa fa-trash-o"></i>
-                        </button>
-                    </td>
-                </tr>
-            `);
-        });
 
-        $('body').on('click', '.del', function () {
+        $('.del-img').on('click', function () {
             var id = $(this).attr('data-id');
-            if ($(this).attr('data-is-js') == '1') {
-                $('#img-' + id).remove();
-                return false;
-            }
-
-            if (!confirm("are you sure you want to delete?")) {
-                return false;
-            }
-
             $.ajax({
                 method: 'POST',
-                url: '/product/DeletePhoto',
+                url: '/product/deletephoto',
                 data: {
                     id
                 },
                 success: function () {
-                    $('#img-' + id).remove();
+                    $('#' + id).remove();
                 },
                 error: function () {
-                    alert("there are some error");
+                    alert('error');
                 }
             })
         });
-
     </script>
 }
+

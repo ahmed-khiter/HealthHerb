@@ -116,7 +116,10 @@ namespace HealthHerb.Controllers
             record.Quantity = model.Quantity;
             await crud.Update(record);
 
-            await UpdateImage(model.CurrentImages, record.Id);
+            if (model.Images != null)
+            {
+                await CreateImage(record.Id, model.Images);
+            }
 
             ViewData["Success"] = "Success operation";
 
