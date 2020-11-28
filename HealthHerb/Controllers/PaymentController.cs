@@ -168,7 +168,6 @@ namespace HealthHerb.Controllers
                 }
                 prepareModel.ShouldProcess = true;
                 prepareModel.Products = products;
-                ViewData["Error"] = "Try to make fill data again something";
                 return View(prepareModel);
             }
 

@@ -108,8 +108,8 @@ namespace HealthHerb.Controllers
             {
                 return View();
             }
-            payment.SecretKey = model.SecretKey;
-            payment.PublishKey = model.PublishKey;
+            payment.SecretKey = model.SecretKey.Trim();
+            payment.PublishKey = model.PublishKey.Trim();
             await paymentManageCrud.Update(payment);
 
             ViewData["Success"] = "Success update";
