@@ -442,4 +442,4 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-wwwroot/uploads/
+**/wwwroot/uploads//*
