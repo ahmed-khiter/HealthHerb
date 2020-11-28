@@ -1,8 +1,10 @@
-﻿using HealthHerb.Interface;
+﻿using HealthHerb.Data;
+using HealthHerb.Interface;
 using HealthHerb.Models.Product;
 using HealthHerb.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,7 @@ namespace HealthHerb.Controllers
         private readonly ICrud<Product> productCrud;
         private readonly ICrud<Cart> crud;
         private readonly SignInManager<BaseUser> signInManager;
+        private readonly AppDbContext context;
         private readonly UserManager<BaseUser> userManager;
 
         public CartController
@@ -22,12 +25,14 @@ namespace HealthHerb.Controllers
             ICrud<Product> productCrud,
             ICrud<Cart> crud,
             SignInManager<BaseUser> signInManager,
+            AppDbContext context,
             UserManager<BaseUser> userManager
         )
         {
             this.productCrud = productCrud;
             this.crud = crud;
             this.signInManager = signInManager;
+            this.context = context;
             this.userManager = userManager;
         }
 
@@ -37,7 +42,9 @@ namespace HealthHerb.Controllers
             if (signInManager.IsSignedIn(User))
             {
                 var userId = userManager.GetUserId(User);
-                return View(await crud.GetAll(m => m.UserId == userId, new string[] { "Product" }));
+                var result = await context.Carts.Where(m => m.UserId == userId)
+                                 .Include(m => m.Product).ThenInclude(m => m.Images).ToListAsync();
+                return View(result);
             }
 
             return Redirect("/Account/Login");
