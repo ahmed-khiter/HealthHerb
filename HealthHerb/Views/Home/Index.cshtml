@@ -47,8 +47,7 @@
                                         }
                                         @foreach (var image in record.Images)
                                         {
-                                            <div class="item @(idx == 0 ? "active" : string.Empty)" style="height:200px">
-                                                <img src="/uploads/@image.Name" class="img-fluid" style="max-height:500px" />
+                                            <div class="item @(idx == 0 ? "active" : string.Empty)" style="height:200px;background:url('/uploads/@image.Name') center center no-repeat;background-size:contain">
                                             </div>
                                             idx++;
                                         }
