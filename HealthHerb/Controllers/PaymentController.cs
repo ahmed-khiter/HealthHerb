@@ -1,4 +1,5 @@
 ﻿using HealthHerb.Authorization;
+using HealthHerb.Data;
 using HealthHerb.Enum;
 using HealthHerb.Interface;
 using HealthHerb.Models;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,7 @@ namespace HealthHerb.Controllers
         private readonly ICrud<OrderProduct> orderProductCrud;
         private readonly ICrud<PaymentSetting> paymentSettingCrud;
         private readonly ICrud<ShippingPrice> shippingPriceCrud;
+        private readonly AppDbContext context;
         private readonly SignInManager<BaseUser> signInManager;
         private readonly UserManager<BaseUser> userManager;
 
@@ -41,6 +44,7 @@ namespace HealthHerb.Controllers
             ICrud<OrderProduct> orderProductCrud,
             ICrud<PaymentSetting> paymentSettingCrud,
             ICrud<ShippingPrice> shippingPriceCrud,
+            AppDbContext context,
             SignInManager<BaseUser> signInManager,
             UserManager<BaseUser> userManager
         )
@@ -53,6 +57,7 @@ namespace HealthHerb.Controllers
             this.orderProductCrud = orderProductCrud;
             this.paymentSettingCrud = paymentSettingCrud;
             this.shippingPriceCrud = shippingPriceCrud;
+            this.context = context;
             this.signInManager = signInManager;
             this.userManager = userManager;
         }
@@ -70,7 +75,7 @@ namespace HealthHerb.Controllers
             ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
 
             var user = await userManager.GetUserAsync(User);
-            var carts = await cartCrud.GetAll(m => m.UserId.Equals(user.Id));
+            var carts = context.Carts.Where(m => m.UserId.Equals(user.Id)).Include(m => m.Product).ThenInclude(m => m.Images);
             List<Models.Product.Product> products = new List<Models.Product.Product>();
            
             foreach (var item in carts)
@@ -107,7 +112,7 @@ namespace HealthHerb.Controllers
                 var countries = await shippingPriceCrud.GetAll();
                 ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
                
-                var cartsback = await cartCrud.GetAll(m => m.UserId.Equals(userback.Id));
+                var cartsback = context.Carts.Where(m => m.UserId.Equals(userback.Id)).Include(m => m.Product).ThenInclude(m => m.Images);
 
                 List<Models.Product.Product> products = new List<Models.Product.Product>();
                 foreach (var item in cartsback)
