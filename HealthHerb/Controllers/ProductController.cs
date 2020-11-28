@@ -60,6 +60,7 @@ namespace HealthHerb.Controllers
                 Price = model.Price,
                 Discount = model.Discount,
                 Quantity = model.Quantity, 
+                Appear=model.Appear
             };
 
             await crud.Add(record);
@@ -85,6 +86,7 @@ namespace HealthHerb.Controllers
                 Price = record.Price,
                 Discount = record.Discount,
                 Quantity = record.Quantity,
+                Appear = record.Appear
             };
 
             foreach (var image in images)
@@ -114,6 +116,7 @@ namespace HealthHerb.Controllers
             record.Price = model.Price;
             record.Discount = model.Discount;
             record.Quantity = model.Quantity;
+            record.Appear = model.Appear;
             await crud.Update(record);
 
             if (model.Images != null)

@@ -22,6 +22,10 @@ namespace HealthHerb.ViewModels.Accounts
         public string Email { get; set;}
 
         [Required]
+        [DataType(DataType.PhoneNumber)]
+        public string Phonenumber { get; set; }
+
+        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

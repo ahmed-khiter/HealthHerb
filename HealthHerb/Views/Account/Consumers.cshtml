@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<BaseUser>
-@inject UserManager<BaseUser> userManager
 @{
     Layout = "_AdminDashboard";
     ViewBag.Title = "Customers";
@@ -21,25 +20,19 @@
                     </tr>
                 </thead>
                 <tbody>
-
                     @foreach (var record in Model)
                     {
-                        var userInRole = await userManager.IsInRoleAsync(record, Role.Admin);
-                        if (!userInRole)
-                        {
-                            <tr class="gradeX">
-                                <td>@record.FullName</td>
-                                <td>@record.Email</td>
-                                <td>@record.PhoneNumber</td>
-                                <td>@record.Address</td>
-                                <td>
-                                    <form asp-controller="setting" asp-action="" asp-route-id="@record.Id">
-                                    </form>
-                                </td>
-                            </tr>
-                        }
+                        <tr class="gradeX">
+                            <td>@record.FullName</td>
+                            <td>@record.Email</td>
+                            <td>@record.PhoneNumber</td>
+                            <td>@record.Address</td>
+                            <td>
+                                <form asp-controller="setting" asp-action="" asp-route-id="@record.Id">
+                                </form>
+                            </td>
+                        </tr>
                     }
-
                 </tbody>
             </table>
         </div>

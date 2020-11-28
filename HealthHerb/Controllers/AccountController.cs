@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HealthHerb.Authorization;
+using HealthHerb.Enum;
 using HealthHerb.Models;
 using HealthHerb.Models.User;
 using HealthHerb.ViewModels.Accounts;
@@ -70,7 +71,8 @@ namespace HealthHerb.Controllers
                 FirstName = model.FirstName, 
                 LastName = model.LastName ,
                 EmailConfirmed = true,
-                Address = model.Address
+                Address = model.Address,
+                PhoneNumber = model.Phonenumber
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
@@ -132,6 +134,13 @@ namespace HealthHerb.Controllers
         {
             await signInManager.SignOutAsync();
             return Redirect("/");
+        }
+
+        [Authorize(Role.Admin)]
+        public IActionResult Consumers()
+        {
+            var test = userManager.Users.Where(m => m.AccountType.Equals(AccountType.Client));
+            return View(test);
         }
     }
 }

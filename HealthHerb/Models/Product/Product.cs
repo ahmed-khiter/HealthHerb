@@ -19,6 +19,7 @@ namespace HealthHerb.Models.Product
         [Column(TypeName = "decimal(18,2)")]
         public float Discount { get; set; }
         public string Description { get; set; }
+        public bool Appear { get; set; }
 
     }
 }

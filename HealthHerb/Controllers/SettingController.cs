@@ -1,5 +1,6 @@
 ﻿using HealthHerb.Authorization;
 using HealthHerb.Data;
+using HealthHerb.Enum;
 using HealthHerb.Help;
 using HealthHerb.Interface;
 using HealthHerb.Models;
@@ -8,6 +9,7 @@ using HealthHerb.Models.Settings;
 using HealthHerb.Models.User;
 using HealthHerb.ViewModels.Setting;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -26,6 +28,7 @@ namespace HealthHerb.Controllers
         private readonly ICrud<FrontEndData> frontendDataCrud;
         private readonly ICrud<OrderProduct> orderProductCrud;
         private readonly ICrud<ShippingPrice> shippingPriceCrud;
+        private readonly UserManager<BaseUser> userManager;
         private readonly AppDbContext context;
         private readonly FileManager fileManager;
 
@@ -36,6 +39,7 @@ namespace HealthHerb.Controllers
             ICrud<FrontEndData> frontendDataCrud,
             ICrud<OrderProduct> orderProductCrud,
             ICrud<ShippingPrice> shippingPriceCrud,
+            UserManager<BaseUser> userManager,
             AppDbContext context,
             FileManager fileManager
 
@@ -46,6 +50,7 @@ namespace HealthHerb.Controllers
             this.frontendDataCrud = frontendDataCrud;
             this.orderProductCrud = orderProductCrud;
             this.shippingPriceCrud = shippingPriceCrud;
+            this.userManager = userManager;
             this.context = context;
             this.fileManager = fileManager;
         }
@@ -165,13 +170,6 @@ namespace HealthHerb.Controllers
             await frontendDataCrud.Update(record);
             ViewData["Success"] = "Success update";
             return Redirect("/setting/index");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Customers()
-        {
-            var record = await context.Users.ToListAsync();
-            return View(record);
         }
     }
 }

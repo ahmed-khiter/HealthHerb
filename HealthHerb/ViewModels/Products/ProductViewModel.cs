@@ -33,5 +33,8 @@ namespace HealthHerb.ViewModels.Products
 
         [Display(Name = "Add collection of images")]
         public List<IFormFile> Images { get; set; }
+        [Display(Name="Appear in home or not")]
+        public bool Appear { get; set; }
+
     }
 }

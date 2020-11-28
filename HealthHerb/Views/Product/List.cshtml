@@ -17,6 +17,7 @@
                         <th class="hidden-phone">Price</th>
                         <th class="hidden-phone">Quantity</th>
                         <th class="hidden-phone">discount</th>
+                        <th>Appear</th>
                         <th class="hidden-phone">Action</th>
                     </tr>
                 </thead>
@@ -52,6 +53,7 @@
                             <a class="cart_quantity_down btn btn-danger" href="/product/decreaseitem/@record.Id"> - </a>
                         </td>
                         <td class="center hidden-phone"><strong>@record.Discount%</strong></td>
+                        <th>@record.Appear</th>
                         <td class="center hidden-phone">
                             <a class="btn btn-warning" asp-controller="product" asp-action="edit" asp-route-id="@record.Id"><i class="fa fa-pencil"></i></a>
                             <form method="post" asp-controller="product" asp-action="delete" asp-route-id="@record.Id" style="display:inline">
