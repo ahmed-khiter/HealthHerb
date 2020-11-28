@@ -43,7 +43,7 @@ namespace HealthHerb.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var model = await productCrud.GetAll(m=>m.Quantity>0 , new string[] { "Images" });
+            var model = await productCrud.GetAll(m=>m.Quantity>0&&m.Appear , new string[] { "Images" });
             return View(model);
         }
 
