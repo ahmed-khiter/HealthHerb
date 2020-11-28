@@ -75,7 +75,8 @@ namespace HealthHerb.Controllers
             ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
 
             var user = await userManager.GetUserAsync(User);
-            var carts = context.Carts.Where(m => m.UserId.Equals(user.Id)).Include(m => m.Product).ThenInclude(m => m.Images);
+            var carts = await context.Carts.Where(m => m.UserId.Equals(user.Id))
+                    .Include(m => m.Product).ThenInclude(m => m.Images).ToListAsync();
             List<Models.Product.Product> products = new List<Models.Product.Product>();
            
             foreach (var item in carts)
@@ -112,7 +113,8 @@ namespace HealthHerb.Controllers
                 var countries = await shippingPriceCrud.GetAll();
                 ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
                
-                var cartsback = context.Carts.Where(m => m.UserId.Equals(userback.Id)).Include(m => m.Product).ThenInclude(m => m.Images);
+                var cartsback = await context.Carts.Where(m => m.UserId.Equals(userback.Id))
+                    .Include(m => m.Product).ThenInclude(m => m.Images).ToListAsync();
 
                 List<Models.Product.Product> products = new List<Models.Product.Product>();
                 foreach (var item in cartsback)
@@ -233,7 +235,6 @@ namespace HealthHerb.Controllers
             }
             ViewData["Success"] = "Your order is preparing now we will call you soon.";
             return RedirectToAction("Index", "Home");
-           
         }
     }
 }
