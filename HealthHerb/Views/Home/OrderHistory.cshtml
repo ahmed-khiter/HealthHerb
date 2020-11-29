@@ -5,9 +5,10 @@
 
 @if (Model.Any())
 {
+    <partial name="~/Views/Shared/_Alert.cshtml" />
+
     <div class="container">
         <h1><i class="fa fa-clock-o"></i> Order history</h1>
-
         <hr />
 
         <table class="table table-striped">
@@ -33,7 +34,7 @@
                         <td>
                             <button class="btn btn-info" data-toggle="modal" data-target="#order-@record.Id"><i class="fa fa-eye"></i> View</button>
 
-                            <div class="modal fade" id="order-@record.Id">
+                            <div class="modal fade" id="#order-@record.Id">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-body">
@@ -52,17 +53,17 @@
                                                     {
                                                         <tr>
                                                             <td>
-                                                                @{ 
+                                                                @{
                                                                     int idx = 0;
                                                                 }
                                                                 @foreach (var image in product.Product.Images)
                                                                 {
-                                                                      <div class="carousel-item @(idx == 0 ? "active" : string.Empty)">
-                                                                            <img src="/uploads/@image.Name" style="width:60px" />
-                                                                      </div>
+                                                                    <div class="carousel-item @(idx == 0 ? "active" : string.Empty)">
+                                                                        <img src="/uploads/@image.Name" style="width:60px" />
+                                                                    </div>
                                                                     idx++;
                                                                 }
-                                                                
+
                                                             </td>
                                                             <td>@product.Product.Name</td>
                                                             <td>@product.ProductPrice</td>

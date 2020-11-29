@@ -232,8 +232,8 @@ namespace HealthHerb.Controllers
                 endcoupon.Invalid = true;
                 await couponUsedCrud.Update(endcoupon);
             }
-            ViewData["Success"] = "Your order is preparing now we will call you soon.";
-            return RedirectToAction("Index", "Home");
+            ViewData["Success"] = $"Your order with number{order.OrderNumber} has been received and is now being processed we have sent you  a receipt to your registered email";
+            return RedirectToAction("OrderHistory", "Home");
         }
     }
 }

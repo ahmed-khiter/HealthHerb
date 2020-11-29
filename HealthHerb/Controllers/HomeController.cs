@@ -61,7 +61,8 @@ namespace HealthHerb.Controllers
             var model = context.Orders
                 .Where(m => m.UserId.Equals(userId))
                 .Include(m => m.OrderProducts)
-                .ThenInclude(m => m.Product);
+                .ThenInclude(m => m.Product)
+                .ThenInclude(m=>m.Images);
 
             return View(model);
         }
