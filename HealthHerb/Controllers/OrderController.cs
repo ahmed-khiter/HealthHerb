@@ -62,7 +62,7 @@ namespace HealthHerb.Controllers
             var order = await crud.GetById(orderId);
             order.OrderStatus = orderStatus;
             await crud.Update(order);
-            ViewData["Success"] = "Operation success";
+            TempData["Success"] = "Operation success";
             return RedirectToAction("Index");
         }
     }

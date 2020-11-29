@@ -72,7 +72,7 @@ namespace HealthHerb.Controllers
             }
             var model = new PrepareProductViewModel();
             var countries = await shippingPriceCrud.GetAll();
-            ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
+            TempData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
 
             var user = await userManager.GetUserAsync(User);
             var carts = await context.Carts.Where(m => m.UserId.Equals(user.Id))
@@ -111,7 +111,7 @@ namespace HealthHerb.Controllers
                 prepareModel = model;
 
                 var countries = await shippingPriceCrud.GetAll();
-                ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
+                TempData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
                
                 var cartsback = await context.Carts.Where(m => m.UserId.Equals(userback.Id))
                     .Include(m => m.Product).ThenInclude(m => m.Images).ToListAsync();
@@ -158,12 +158,12 @@ namespace HealthHerb.Controllers
                         }
                         else
                         {
-                            ViewData["invalid"] = "invalid coupon or you used this coupon before ";
+                            TempData["invalid"] = "invalid coupon or you used this coupon before ";
                         }
                     }
                     else
                     {
-                        ViewData["invalid"] = "invalid coupon or you used this coupon before ";
+                        TempData["invalid"] = "invalid coupon or you used this coupon before ";
                     }
                 }
                 prepareModel.ShouldProcess = true;
@@ -232,7 +232,7 @@ namespace HealthHerb.Controllers
                 endcoupon.Invalid = true;
                 await couponUsedCrud.Update(endcoupon);
             }
-            ViewData["Success"] = $"Your order with number{order.OrderNumber} has been received and is now being processed we have sent you  a receipt to your registered email";
+            TempData["Success"] = $"Your order with number{order.OrderNumber} has been received and is now being processed we have sent you  a receipt to your registered email";
             return RedirectToAction("OrderHistory", "Home");
         }
     }

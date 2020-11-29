@@ -1,22 +1,22 @@
 ﻿
 <div class="pt-2 pb-2">
-    @if (ViewData.ContainsKey("Success"))
+    @if (TempData.ContainsKey("Success"))
     {
         <div class="alert alert-success">
-            <i class="fa fa-check-square-o"></i> @ViewData["Success"]
+            <i class="fa fa-check-square-o"></i> @TempData["Success"]
         </div>
     }
 
-    @if (ViewData.ContainsKey("Error"))
+    @if (TempData.ContainsKey("Error"))
     {
         <div class="alert alert-danger">
-            <i class="fa fa-exclamation-triangle"></i> @ViewData["Error"]
+            <i class="fa fa-exclamation-triangle"></i> @TempData["Error"]
         </div>
     }
-    @if (ViewData.ContainsKey("Invalid"))
+    @if (TempData.ContainsKey("Invalid"))
     {
         <div class="alert alert-danger">
-            <i class="fa fa-exclamation-triangle"></i> @ViewData["Invalid"]
+            <i class="fa fa-exclamation-triangle"></i> @TempData["Invalid"]
         </div>
     }
 </div>

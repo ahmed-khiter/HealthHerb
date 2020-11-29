@@ -5,12 +5,10 @@
 
 @if (Model.Any())
 {
-    <partial name="~/Views/Shared/_Alert.cshtml" />
-
     <div class="container">
         <h1><i class="fa fa-clock-o"></i> Order history</h1>
         <hr />
-
+         <partial name="~/Views/Shared/_Alert.cshtml" />
         <table class="table table-striped">
             <thead style="background-color:#000;color:#FFF">
                 <tr>
@@ -34,7 +32,7 @@
                         <td>
                             <button class="btn btn-info" data-toggle="modal" data-target="#order-@record.Id"><i class="fa fa-eye"></i> View</button>
 
-                            <div class="modal fade" id="#order-@record.Id">
+                            <div class="modal fade" id="order-@record.Id">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-body">

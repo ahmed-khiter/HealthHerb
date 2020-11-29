@@ -119,7 +119,7 @@ namespace HealthHerb.Controllers
 
             await crud.Update(record);
 
-            ViewData["Success"] = "Success operation";
+            TempData["Success"] = "Success operation";
 
             return RedirectToAction(nameof(Edit), new { id = model.Id });
         }
@@ -129,7 +129,7 @@ namespace HealthHerb.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             await crud.Delete(id);
-            ViewData["Success"] = "Success delete";
+            TempData["Success"] = "Success delete";
 
             return RedirectToAction(nameof(List));
         }
