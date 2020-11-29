@@ -140,7 +140,7 @@
 
                     <div class="col-md-6">
                         <label asp-for="Country"></label>
-                        <select data-product-id="@Model.ShippingId" required  id="shipping-country" class="form-control" asp-for="Country" asp-items="@(TempData["Countries"] as SelectList)">
+                        <select data-product-id="@Model.ShippingId" required  id="shipping-country" class="form-control" asp-for="Country" asp-items="@(ViewData["Countries"] as SelectList)">
                             <option selected disabled>--Selecte country--</option>
                         </select>
                         <span asp-validation-for="Country" class="text-danger"></span>
