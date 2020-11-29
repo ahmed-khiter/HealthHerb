@@ -232,7 +232,7 @@ namespace HealthHerb.Controllers
                 endcoupon.Invalid = true;
                 await couponUsedCrud.Update(endcoupon);
             }
-            TempData["Success"] = $"Your order with number{order.OrderNumber} has been received and is now being processed we have sent you  a receipt to your registered email";
+            TempData["SuccessPayment"] = $"Your order with number{order.OrderNumber} has been received and is now being processed we have sent you  a receipt to your registered email";
             return RedirectToAction("OrderHistory", "Home");
         }
     }
