@@ -72,7 +72,7 @@ namespace HealthHerb.Controllers
             }
             var model = new PrepareProductViewModel();
             var countries = await shippingPriceCrud.GetAll();
-            TempData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
+            ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
 
             var user = await userManager.GetUserAsync(User);
             var carts = await context.Carts.Where(m => m.UserId.Equals(user.Id))
