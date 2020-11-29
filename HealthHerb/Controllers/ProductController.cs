@@ -211,12 +211,15 @@ namespace HealthHerb.Controllers
         {
             var images = await imageCrud.GetAll(img => img.ProductId.Equals(productId));
 
-            foreach (var image in images)
+            if (images != null)
             {
-                fileManager.Delete(image.Name);
-            }
+                foreach (var image in images)
+                {
+                    fileManager.Delete(image.Name);
+                }
 
-            await imageCrud.Delete(img => img.ProductId.Equals(productId));
+                await imageCrud.Delete(img => img.ProductId.Equals(productId));
+            }
         }
 
         private async Task CreateImage(string productId, List<IFormFile> images)
