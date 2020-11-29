@@ -82,7 +82,7 @@ namespace HealthHerb.Controllers
                 await signInManager.SignInAsync(user, true);
                 await userManager.AddToRoleAsync(user, Role.Consumer);
 
-                TempData["Success"] = "Success register, welcome to Health Herb";
+                ViewData["Success"] = "Success register, welcome to Health Herb";
 
                 return Redirect("/");
             }
@@ -126,7 +126,7 @@ namespace HealthHerb.Controllers
 
                 return View(model);
             }
-            TempData["Success"] = "Welcome to health herb";
+            ViewData["Success"] = "Welcome to health herb";
             return Redirect("/");
         }
 

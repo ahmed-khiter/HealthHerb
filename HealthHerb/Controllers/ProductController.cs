@@ -67,7 +67,7 @@ namespace HealthHerb.Controllers
 
             await CreateImage(record.Id, model.Images);
 
-            TempData["Success"] = "Success added product";
+            ViewData["Success"] = "Success added product";
 
             return RedirectToAction(nameof(Create));
         }
@@ -124,7 +124,7 @@ namespace HealthHerb.Controllers
                 await CreateImage(record.Id, model.Images);
             }
 
-            TempData["Success"] = "Success operation";
+            ViewData["Success"] = "Success operation";
 
             return RedirectToAction(nameof(Edit), new { id = model.Id });
         }
@@ -134,7 +134,7 @@ namespace HealthHerb.Controllers
         {
             await DeleteImage(id);
             await crud.Delete(id);
-            TempData["Success"] = "Success Delete";
+            ViewData["Success"] = "Success Delete";
 
             return RedirectToAction(nameof(List));
         }
@@ -154,14 +154,14 @@ namespace HealthHerb.Controllers
             {
                 record.Quantity -= 1;
                 await crud.Update(record);
-                TempData["Success"] = "Success delete item";
+                ViewData["Success"] = "Success delete item";
                 return RedirectToAction(nameof(List));
             }
             else
             {
                 record.Quantity -= 1;
                 await crud.Update(record);
-                TempData["Success"] = "Success decrease item";
+                ViewData["Success"] = "Success decrease item";
                 return RedirectToAction(nameof(List));
             }
             
@@ -172,7 +172,7 @@ namespace HealthHerb.Controllers
             var record = await crud.GetById(id);
             record.Quantity += 1;
             await crud.Update(record);
-            TempData["Success"] = "Success increase item";
+            ViewData["Success"] = "Success increase item";
             return RedirectToAction(nameof(List));
         }
 

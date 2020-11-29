@@ -60,25 +60,25 @@ namespace HealthHerb.Controllers
             var result = await orderCrud.GetAll(new string[] { "OrderProducts" });
 
             var totalResult = result.Select(m => m.OrderProducts.Select(x => x.TotalPrice).Sum()).Sum();
-            TempData["total"] = totalResult;
+            ViewData["total"] = totalResult;
 
             var today = DateTime.Now.AddDays(-1);
             var todayResult = result.Where(m => m.CreatedAt>=today)
                              .Select(m => m.OrderProducts
                             .Select(x => x.TotalPrice).Sum()).Sum();
-            TempData["today"] = totalResult;
+            ViewData["today"] = totalResult;
 
             var lastWeek = DateTime.Now.AddDays(-7);
             var monthResult = result.Where(m =>m.CreatedAt>=lastWeek)
                                 .Select(m => m.OrderProducts
                                 .Select(x => x.TotalPrice).Sum()).Sum();
-            TempData["week"] = monthResult;
+            ViewData["week"] = monthResult;
 
             var lastMonth = DateTime.Now.AddMonths(-1);
             var yearResult = result.Where(m => m.CreatedAt >= lastMonth)
                                .Select(m => m.OrderProducts
                                .Select(x => x.TotalPrice).Sum()).Sum();
-            TempData["month"] = yearResult;
+            ViewData["month"] = yearResult;
 
             return View(result);
         }
@@ -112,7 +112,7 @@ namespace HealthHerb.Controllers
             payment.PublishKey = model.PublishKey.Trim();
             await paymentManageCrud.Update(payment);
 
-            TempData["Success"] = "Success update";
+            ViewData["Success"] = "Success update";
             return Redirect("/setting/index");
         }
 
@@ -168,7 +168,7 @@ namespace HealthHerb.Controllers
                     fileManager.Delete(model.CurrentImage);
             }
             await frontendDataCrud.Update(record);
-            TempData["Success"] = "Success update";
+            ViewData["Success"] = "Success update";
             return Redirect("/setting/index");
         }
     }

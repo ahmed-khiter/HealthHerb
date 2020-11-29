@@ -45,7 +45,7 @@ namespace HealthHerb.Controllers
 
             await crud.Add(model);
 
-            TempData["Success"] = "Success create";
+            ViewData["Success"] = "Success create";
             return RedirectToAction(nameof(Create));
         }
 
@@ -73,7 +73,7 @@ namespace HealthHerb.Controllers
 
             await crud.Update(model);
 
-            TempData["Success"] = "Success create";
+            ViewData["Success"] = "Success create";
 
             return RedirectToAction(nameof(Index));
         }
@@ -90,7 +90,7 @@ namespace HealthHerb.Controllers
 
             await crud.Delete(id);
 
-            TempData["Success"] = "Success delete";
+            ViewData["Success"] = "Success delete";
 
             return RedirectToAction(nameof(Index));
         }

@@ -111,7 +111,7 @@ namespace HealthHerb.Controllers
                 prepareModel = model;
 
                 var countries = await shippingPriceCrud.GetAll();
-                TempData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
+                ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
                
                 var cartsback = await context.Carts.Where(m => m.UserId.Equals(userback.Id))
                     .Include(m => m.Product).ThenInclude(m => m.Images).ToListAsync();
@@ -158,12 +158,12 @@ namespace HealthHerb.Controllers
                         }
                         else
                         {
-                            TempData["invalid"] = "invalid coupon or you used this coupon before ";
+                            ViewData["invalid"] = "invalid coupon or you used this coupon before ";
                         }
                     }
                     else
                     {
-                        TempData["invalid"] = "invalid coupon or you used this coupon before ";
+                        ViewData["invalid"] = "invalid coupon or you used this coupon before ";
                     }
                 }
                 prepareModel.ShouldProcess = true;
