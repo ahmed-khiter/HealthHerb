@@ -107,8 +107,7 @@ namespace HealthHerb
 
             Seed.SeedUser(userManager, roleManager);
             Seed.SeedCountries(context);
-            var payment = paymentSettingCrud.GetById("PaymentSetting").Result;
-            StripeConfiguration.ApiKey = payment.SecretKey;
+            Seed.SeedPayment(context);
 
             app.UseHttpsRedirection();
 

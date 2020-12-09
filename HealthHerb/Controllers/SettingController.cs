@@ -86,15 +86,7 @@ namespace HealthHerb.Controllers
         [HttpGet]
         public async Task<IActionResult> PaymentSetting()
         {
-            var payment = await paymentManageCrud.GetById("PaymentSetting");
-
-            if (payment == null)
-            {
-                payment = await paymentManageCrud.Add(new PaymentSetting
-                {
-                    Id = "PaymentSetting",
-                });
-            }
+            var payment = await paymentManageCrud.GetFirst();
 
             return View(payment);
         }
@@ -102,18 +94,19 @@ namespace HealthHerb.Controllers
         [HttpPost]
         public async Task<IActionResult> PaymentSetting(PaymentSetting model)
         {
-            var payment = await paymentManageCrud.GetById(model.Id);
-
-            if (payment == null)
+            if (!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
-            payment.SecretKey = model.SecretKey.Trim();
-            payment.PublishKey = model.PublishKey.Trim();
-            await paymentManageCrud.Update(payment);
 
-            ViewData["Success"] = "Success update";
-            return Redirect("/setting/index");
+            model.ClientId = model.ClientId.Trim();
+            model.ClientSecret = model.ClientSecret.Trim();
+
+            await paymentManageCrud.Update(model);
+
+            ViewData["Success"] = "Payment has been updated";
+
+            return RedirectToAction(nameof(PaymentSetting));
         }
 
 

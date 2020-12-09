@@ -6,8 +6,10 @@ using HealthHerb.Models;
 using HealthHerb.Models.Product;
 using HealthHerb.Models.Settings;
 using HealthHerb.Models.User;
+using HealthHerb.Payment;
 using HealthHerb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,6 +32,7 @@ namespace HealthHerb.Controllers
         private readonly ICrud<OrderProduct> orderProductCrud;
         private readonly ICrud<PaymentSetting> paymentSettingCrud;
         private readonly ICrud<ShippingPrice> shippingPriceCrud;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly AppDbContext context;
         private readonly SignInManager<BaseUser> signInManager;
         private readonly UserManager<BaseUser> userManager;
@@ -44,6 +47,7 @@ namespace HealthHerb.Controllers
             ICrud<OrderProduct> orderProductCrud,
             ICrud<PaymentSetting> paymentSettingCrud,
             ICrud<ShippingPrice> shippingPriceCrud,
+            IHttpContextAccessor httpContextAccessor,
             AppDbContext context,
             SignInManager<BaseUser> signInManager,
             UserManager<BaseUser> userManager
@@ -57,6 +61,7 @@ namespace HealthHerb.Controllers
             this.orderProductCrud = orderProductCrud;
             this.paymentSettingCrud = paymentSettingCrud;
             this.shippingPriceCrud = shippingPriceCrud;
+            this.httpContextAccessor = httpContextAccessor;
             this.context = context;
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -70,6 +75,7 @@ namespace HealthHerb.Controllers
             {
                 return Redirect("/account/login");
             }
+
             var model = new PrepareProductViewModel();
             var countries = await shippingPriceCrud.GetAll();
             ViewData["Countries"] = new SelectList(countries.OrderBy(m => m.Country), "Id", "Country");
@@ -98,13 +104,25 @@ namespace HealthHerb.Controllers
             model.Email = user.Email;
             model.PhoneNumber = user.PhoneNumber;
 
+            PaymentSetting paymentCredential = await context.PaymentManages.FirstOrDefaultAsync();
+            PayPal paypal = new PayPal(httpContextAccessor, context, paymentCredential.IsLive);
+
+            ViewData["OrderId"] = await paypal.CreateOrder(model.TotalPrice, "GBP");
+            ViewData["ClientId"] = paymentCredential.ClientId;
+            ViewData["ClientToken"] = HttpContext.Request.Cookies["client_token"] ?? await paypal.GenerateClientToken();
+            ViewData["Currency"] = "GBP";
+
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PrepareOrder(PrepareProductViewModel model, string stripeToken)
+        public async Task<IActionResult> PrepareOrder(PrepareProductViewModel model, string paypalOrderId, bool capture)
         {
             var userback = await userManager.GetUserAsync(User);
+
+            PaymentSetting paymentCredential = await context.PaymentManages.FirstOrDefaultAsync();
+            PayPal paypal = new PayPal(httpContextAccessor, context, paymentCredential.IsLive);
+
             if (!model.ShouldProcess)
             {
                 var prepareModel = new PrepareProductViewModel();
@@ -166,34 +184,43 @@ namespace HealthHerb.Controllers
                         ViewData["invalid"] = "invalid coupon or you used this coupon before ";
                     }
                 }
+
                 prepareModel.ShouldProcess = true;
                 prepareModel.Products = products;
+
+                ViewData["OrderId"] = await paypal.CreateOrder(prepareModel.TotalPrice, "GBP");
+                ViewData["ClientId"] = paymentCredential.ClientId;
+                ViewData["ClientToken"] = HttpContext.Request.Cookies["client_token"] ?? await paypal.GenerateClientToken();
+                ViewData["Currency"] = "GBP";
+
                 return View(prepareModel);
             }
 
-
-
             var user = await userManager.GetUserAsync(User);
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var options = new ChargeCreateOptions
+            if (capture)
             {
-                Amount = (long?)(model.TotalPrice * 100),
-                Currency = "GBP",
-                Source = stripeToken,
-                ReceiptEmail = user.Email,
-            };
-            var service = new ChargeService();
-            Charge charge = service.Create(options);
+                if (!await paypal.Capture(paypalOrderId))
+                {
+                    return Redirect("/home/error");
+                }
+            }
+
+            if (!await paypal.IsPayed(paypalOrderId))
+            {
+                return Redirect("/home/error");
+            }
 
             var carts = await cartCrud.GetAll(m => m.UserId.Equals(user.Id));
             var country = await shippingPriceCrud.GetById(m => m.Id.Equals(model.Country));
             var order = await orderCrud.Add(new Models.Product.Order
             {
-                PaymentId = charge.Id,
+                PaymentId = paypalOrderId,
                 UserId = userback.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,

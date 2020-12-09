@@ -274,13 +274,21 @@ namespace HealthHerb.Data.SeedData
 
                 context.ShippingPrices.AddRangeAsync(record).Wait();
                 context.SaveChangesAsync().Wait();
+            }
+        }
+
+        public static void SeedPayment(AppDbContext context)
+        {
+            var payment = context.PaymentManages.FirstOrDefault();
+
+            if (payment == null)
+            {
                 context.PaymentManages.Add(new Models.Settings.PaymentSetting
                 {
-                    Id = "PaymentSetting",
-                    PublishKey = "here you must enter publish key to make success payment",
-                    SecretKey = "here you must enter secret key to make success payment",
-                    CreatedAt = DateTime.Now
+                    ClientId = "Ad5ZUB4yHxOhwj3t9_bZTGskZfRc6NzN09yyhreebNKWcKLEDLMXZhLeFbc8vUVRfEee45mtr694-ITn",
+                    ClientSecret = "ELlxpiCj6F8DlSfcEokwrzNhvsTEf24lbpl3AAnE6mgLsak0hI_h2pDcPagc0g6crIiCzyVcsAdgLl9v"
                 });
+
                 context.SaveChanges();
             }
         }

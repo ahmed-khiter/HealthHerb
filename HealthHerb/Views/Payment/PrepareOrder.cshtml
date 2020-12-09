@@ -7,31 +7,51 @@
     int i = 0;
     int quantity = 0;
 }
-<style>
-    .stripe-button-el {
-        border-radius: 5px!important;
-        float: right
-    }
+@section Styles {
+    <style>
+        .card-field {
+            height: 40px;
+            border: 1px solid #8d8d8d;
+            box-sizing: border-box;
+            padding-left: 5px;
+        }
 
-    .stripe-button-el span {
-        background: #000;
-        box-shadow: none !important;
-    }
-</style>
-<h1>
-    <partial name="~/Views/Shared/_Alert.cshtml" />
-</h1>
+        .payment-section {
+            position: relative;
+        }
+
+        #payment-loader {
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            background: rgba(255,255,255,.7);
+        }
+    </style>
+}
 <div class="container">
     <div class="signup-form">
 
         <h2><i class="fa fa-shopping-cart"></i> <strong>Checkout</strong></h2>
 
-        <form method="post" asp-controller="payment" asp-action="prepareorder" id="product-form">
+        <form method="post" asp-controller="payment" asp-action="prepareorder" id="product-form" style="position:relative">
+
+            <partial name="~/Views/Shared/_Alert.cshtml" />
+
+            <div id="payment-loader">
+                <h3 class="text-dark">Loading...</h3>
+            </div>
+
             <input type="hidden" asp-for="ShouldProcess" value="@Model.ShouldProcess" />
             <input type="hidden" asp-for="UserId" />
             <input type="hidden" asp-for="Products" />
             <input type="hidden" asp-for="ShippingPrice" />
             <input type="hidden" asp-for="TotalPrice" />
+            <input type="hidden" id="capture" name="capture" value="False" />
+            <input type="hidden" id="order-id" name="paypalOrderId" value="@ViewData["OrderId"]" />
 
             <div class="row">
                 <div class="col-md-6">
@@ -52,7 +72,6 @@
                                         @foreach (var image in product.Images)
                                         {
                                             <img src="~/uploads/@image.Name" style="max-width:60px" />
-
                                         }
                                     </td>
                                     <td>@product.Name</td>
@@ -68,7 +87,7 @@
                         <tr>
                             <td width="200"><strong>@Html.DisplayNameFor(m => m.DiscountCode)</strong></td>
                             <td style="position:relative">
-                                <input class="form-control" asp-for="DiscountCode" style="background:#FFF"/>
+                                <input class="form-control" asp-for="DiscountCode" style="background:#FFF" />
                                 <button id="apply-coupon" class="btn btn-dark" type="button" style="position: absolute; top: 8px; right: 8px; height: 40px; border-top-right-radius: 7px; border-bottom-right-radius: 7px;"><i class="fa fa-check-square-o"></i> Apply</button>
                             </td>
                         </tr>
@@ -84,25 +103,13 @@
                             <td width="200"><strong>Total cost</strong></td>
                             <td><strong class="text-success">£@Model.TotalPrice</strong></td>
                         </tr>
-                        <tr>
+                        <tr id="pmt" style="display:none">
                             <td width="200"><strong>Proceed to payment</strong></td>
                             <td>
-                                <script src="https://checkout.stripe.com/checkout.js"
-                                        class="stripe-button"
-                                        data-key="@paymentSetting.PublishKey"
-                                        data-amount="@paymentSettingCrud.GetById("PaymentSetting")"
-                                        data-name="Health Herb"
-                                        data-description="Checkout total"
-                                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                                        data-locale="en"
-                                        data-zip-code="true"
-                                        data-currency="GBP"
-                                        currency="GBP"
-                                        data-label="Pay Now">
-                                </script>
+                                <div id="paypal-button-container"></div>
                             </td>
                         </tr>
-                    </table>                    
+                    </table>
 
                 </div>
 
@@ -110,58 +117,58 @@
 
                     <div class="col-md-6">
                         <label asp-for="FirstName"></label>
-                        <input asp-for="FirstName" required  />
-                        <span asp-validation-for="FirstName" class ="text-danger"></span>
+                        <input asp-for="FirstName" required class="form-control is-required"/>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label asp-for="LastName"></label>
-                        <input asp-for="LastName" required  />
-                        <span asp-validation-for="LastName" class ="text-danger"></span>
+                        <input asp-for="LastName" required class="form-control is-required"/>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
 
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Email"></label>
-                        <input asp-for="Email" required  />
-                        <span asp-validation-for="Email" class ="text-danger"></span>
+                        <input asp-for="Email" required class="form-control is-required"/>
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label asp-for="PhoneNumber"></label>
-                        <input asp-for="PhoneNumber" required  />
-                        <span asp-validation-for="PhoneNumber" class ="text-danger"></span>
+                        <input asp-for="PhoneNumber" required class="form-control is-required"/>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-12">
                         <label asp-for="Address"></label>
-                        <input asp-for="Address" required  />
-                        <span asp-validation-for="Address" class ="text-danger"></span>
+                        <input asp-for="Address" required class="form-control is-required"/>
+                        <span asp-validation-for="Address" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label asp-for="Country"></label>
-                        <select data-product-id="@Model.ShippingId" required  id="shipping-country" class="form-control" asp-for="Country" asp-items="@(ViewData["Countries"] as SelectList)">
-                            <option selected disabled>--Selecte country--</option>
+                        <select data-product-id="@Model.ShippingId" required id="shipping-country" class="form-control is-required" asp-for="Country" asp-items="@(ViewData["Countries"] as SelectList)">
+                            <option selected disabled="disabled">--Selecte country--</option>
                         </select>
                         <span asp-validation-for="Country" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label asp-for="City"></label>
-                        <input asp-for="City" required  />
-                        <span asp-validation-for="City" class ="text-danger"></span>
+                        <input asp-for="City" required class="form-control is-required" />
+                        <span asp-validation-for="City" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label asp-for="PostalCode"></label>
-                        <input asp-for="PostalCode" required  />
-                        <span asp-validation-for="PostalCode" class ="text-danger"></span>
+                        <input asp-for="PostalCode" required class="form-control is-required" />
+                        <span asp-validation-for="PostalCode" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
                         <label asp-for="Apartment"></label>
-                        <input asp-for="Apartment" required  />
-                        <span asp-validation-for="Apartment" class ="text-danger"></span>
+                        <input asp-for="Apartment" required class="form-control is-required" />
+                        <span asp-validation-for="Apartment" class="text-danger"></span>
                     </div>
 
                 </div>
@@ -174,7 +181,50 @@
 </div>
 
 @section Scripts {
+    <script src="https://www.paypal.com/sdk/js?components=hosted-fields,buttons,funding-eligibility&client-id=@ViewData["ClientId"]&currency=@ViewData["Currency"]" data-client-token="@ViewData["ClientToken"]"></script>
     <script>
+        var inputCount = $('.is-required').length;
+        var invalidCount = 0;
+        var invalidElements = {};
+
+        $('.is-required').each(function () {
+            if (!$(this).val()) {
+                invalidElements[$(this).attr('id')] = true;
+                invalidCount++;
+            }
+        });
+
+        if (invalidCount == 0) {
+            $('#pmt').show();
+        }
+
+        $('.is-required').on('keyup', function () {
+            if (!$(this).val()) {
+
+                if (invalidElements[$(this).attr('id')]) {
+                    return;
+                }
+
+                invalidElements[$(this).attr('id')] = true;
+
+                invalidCount++;
+
+            } else {
+
+                if (invalidElements[$(this).attr('id')]) {
+                    delete invalidElements[$(this).attr('id')];
+                    invalidCount--;
+                }
+
+            }
+
+            if (invalidCount == 0) {
+                $('#pmt').show();
+            } else {
+                $('#ppmt').hide();
+            }
+        });
+
         $('#shipping-country').on('change', function () {
             $('#ShouldProcess').val('False');
             $('#product-form').submit();
@@ -183,5 +233,75 @@
             $('#ShouldProcess').val('False');
             $('#product-form').submit();
         });
+
+        window.addEventListener('load', function () {
+            $('#payment-loader').fadeOut();
+        });
+
+        paypal.Buttons({
+            commit: false,
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '@Model.TotalPrice'
+                        }
+                    }]
+                });
+            },
+            onCancel: function (data) {
+                alert("Payment has been canceled");
+            },
+            onApprove: function (data, actions) {
+                $('#payment-loader').fadeIn();
+                return actions.order.capture().then(function (details) {
+                    $('#order-id').val(details.id);
+                    $('#product-form').submit();
+                });
+            }
+        }).render('#paypal-button-container');
+
+        if (paypal.HostedFields.isEligible()) {
+            paypal.HostedFields.render({
+                createOrder: function () { return "@ViewData["OrderId"]" },
+                fields: {
+                    number: {
+                        selector: '#card-number',
+                        placeholder: 'Card Number'
+                    },
+                    cvv: {
+                        selector: '#cvv',
+                        placeholder: 'CVV'
+                    },
+                    expirationDate: {
+                        selector: '#expiration-date',
+                        placeholder: 'mm/yy'
+                    }
+                }
+            }).then(function (hf) {
+                $('#payment-form').on('submit', function (event) {
+                    event.preventDefault();
+                    $('#payment-loader').fadeIn();
+                    hf.submit({
+                        cardholderName: document.getElementById('card-holder-name').value,
+                        billingAddress: {
+                            streetAddress: document.getElementById('card-billing-address-street').value,
+                            region: document.getElementById('card-billing-address-state').value,
+                            locality: document.getElementById('card-billing-address-city').value,
+                            postalCode: document.getElementById('card-billing-address-zip').value,
+                            countryCodeAlpha2: document.getElementById('card-billing-address-country').value
+                        }
+                    }).then(function () {
+                        $('#capture').val("True");
+                        $('#product-form').submit();
+                    }).catch(function (error) {
+                        $('#payment-loader').fadeOut();
+                        alert('Error while processing your payment!');
+                    });
+                });
+            });
+        } else {
+            $('#payment-form').hide();
+        }
     </script>
 }

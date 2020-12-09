@@ -9,10 +9,17 @@ namespace HealthHerb.Models.Settings
 {
     public class PaymentSetting : Entity
     {
-        [Display(Name ="Secret key")]
-        public string SecretKey { get; set; }
-        [Display(Name ="Publish key")]
-        public string PublishKey { get; set; }
+        [Required]
+        [Display(Name = "Client Id")]
+        public string ClientId { get; set; }
 
+        [Required]
+        [Display(Name = "Client Secret")]
+        public string ClientSecret { get; set; }
+        public string AccessToken { get; set; }
+        public int TokenExpireAt { get; set; }
+
+        [Display(Name = "Live Mode")]
+        public bool IsLive { get; set; }
     }
 }
