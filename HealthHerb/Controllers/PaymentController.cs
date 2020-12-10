@@ -32,6 +32,7 @@ namespace HealthHerb.Controllers
         private readonly ICrud<OrderProduct> orderProductCrud;
         private readonly ICrud<PaymentSetting> paymentSettingCrud;
         private readonly ICrud<ShippingPrice> shippingPriceCrud;
+        private readonly ICrud<Models.Product.Coupon> couponCrud;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly AppDbContext context;
         private readonly SignInManager<BaseUser> signInManager;
@@ -47,6 +48,7 @@ namespace HealthHerb.Controllers
             ICrud<OrderProduct> orderProductCrud,
             ICrud<PaymentSetting> paymentSettingCrud,
             ICrud<ShippingPrice> shippingPriceCrud,
+            ICrud<Models.Product.Coupon> couponCrud,
             IHttpContextAccessor httpContextAccessor,
             AppDbContext context,
             SignInManager<BaseUser> signInManager,
@@ -61,6 +63,7 @@ namespace HealthHerb.Controllers
             this.orderProductCrud = orderProductCrud;
             this.paymentSettingCrud = paymentSettingCrud;
             this.shippingPriceCrud = shippingPriceCrud;
+            this.couponCrud = couponCrud;
             this.httpContextAccessor = httpContextAccessor;
             this.context = context;
             this.signInManager = signInManager;
@@ -155,29 +158,10 @@ namespace HealthHerb.Controllers
 
                 if (model.DiscountCode != null)
                 {
-                    var record = await crud.GetById(m => m.Code.Equals(model.DiscountCode));
-                    if (record != null)
+                    var action = await CheckCoupon(model, userback.Id);
+                    if (action>0)
                     {
-                        if (record.ManyUsed > 0 && (DateTime.Now > record.Start || DateTime.Now < record.End))
-                        {
-                            var copupon = await couponUsedCrud.GetFirst(m => m.CouponId.Equals(record.Id) && m.BaseUserId.Equals(userback.Id));
-                            if (!copupon.Invalid)
-                            {
-                                record.ManyUsed -= 1;
-                                await crud.Update(record);
-                                await couponUsedCrud.Add(new CouponUsed
-                                {
-                                    BaseUserId = userback.Id,
-                                    CouponId = record.Id
-                                });
-                                model.TotalPrice = prepareModel.TotalPrice - (prepareModel.TotalPrice * (decimal)(record.Amount / 100) + prepareModel.ShippingPrice);
-                            }
-                           
-                        }
-                        else
-                        {
-                            ViewData["invalid"] = "invalid coupon or you used this coupon before ";
-                        }
+                        model.TotalPrice = action + prepareModel.ShippingPrice;
                     }
                     else
                     {
@@ -252,6 +236,8 @@ namespace HealthHerb.Controllers
                 await cartCrud.Delete(m => m.UserId.Equals(user.Id));
             }
 
+            await DoneCheckCoupon(model, userback.Id);
+
             var couponHasDone = await crud.GetById(m => m.Code.Equals(model.DiscountCode));
             if (couponHasDone != null)
             {
@@ -261,6 +247,56 @@ namespace HealthHerb.Controllers
             }
             TempData["SuccessPayment"] = $"Your order with number{order.OrderNumber} has been received and is now being processed we have sent you  a receipt to your registered email";
             return RedirectToAction("OrderHistory", "Home");
+        }
+
+        private async Task<decimal> CheckCoupon(PrepareProductViewModel model,string userId)
+        {
+            var record = await couponCrud.GetById(m => m.Code.Equals(model.DiscountCode));
+
+            if (record == null)
+            {
+                return 0;
+            }
+
+            if (record.ManyUsed > 0 && (DateTime.Now > record.Start || DateTime.Now < record.End))
+            {
+                var copupon = await couponUsedCrud.GetFirst(m => m.CouponId.Equals(record.Id) 
+                && m.BaseUserId.Equals(userId));
+
+                if (copupon == null)
+                {
+                    model.TotalPrice = model.TotalPrice - (model.TotalPrice * (decimal)(record.Amount / 100));
+                    return model.TotalPrice;
+                }
+                return 0;
+
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private async Task DoneCheckCoupon(PrepareProductViewModel model, string userId)
+        {
+            var record = await couponCrud.GetById(m => m.Code.Equals(model.DiscountCode));
+            if (record.ManyUsed > 0 && (DateTime.Now > record.Start || DateTime.Now < record.End))
+            {
+                var copupon = await couponUsedCrud.GetFirst(m => m.CouponId.Equals(record.Id)
+                && m.BaseUserId.Equals(userId));
+
+                if (copupon == null)
+                {
+                    record.ManyUsed -= 1;
+                    await crud.Update(record);
+                    await couponUsedCrud.Add(new CouponUsed
+                    {
+                        BaseUserId = userId,
+                        CouponId = record.Id
+                    });
+                }
+
+            }
         }
     }
 }

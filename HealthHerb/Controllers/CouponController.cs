@@ -82,7 +82,7 @@ namespace HealthHerb.Controllers
         {
             var record = await crud.GetById(Id);
 
-            var model = new Coupon()
+            var model = new CouponViewModel()
             {
                 Id = record.Id,
                 Amount = record.Amount,
@@ -97,7 +97,7 @@ namespace HealthHerb.Controllers
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
-        public async Task<IActionResult> Edit(Coupon model)
+        public async Task<IActionResult> Edit(CouponViewModel model)
         {
             if (!ModelState.IsValid)
             {

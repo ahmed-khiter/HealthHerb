@@ -1,19 +1,22 @@
-﻿@model Coupon
+﻿@model CouponViewModel
 @{
     ViewData["Title"] = "Edit Coupon";
     Layout = "_AdminDashboard";
 }
-<partial name="~/Views/Shared/_Alert.cshtml"/>
 
 <div class="row mt">
     <div class="col-lg-12">
         <h4><i class="fa fa-gift"></i> Edit coupon</h4>
         <div class="form-panel">
-            <form class="form-horizontal style-form" method="post" asp-controller="coupon" asp-action="create">
+            <partial name="~/Views/Shared/_Alert.cshtml" />
+            <form class="form-horizontal style-form" method="post" asp-controller="coupon" asp-action="edit">
+
+                <input type="hidden" asp-for="Id" />
+
                 <div class="form-group ">
                     <label class="col-lg-2 control-label" asp-for="Code"></label>
                     <div class="col-lg-10">
-                        <input placeholder="Product name" asp-for="Code" class="form-control">
+                        <input placeholder="Product name" disabled asp-for="Code" class="form-control">
                         <span class="text-danger" asp-validation-for="Code"></span>
                     </div>
                 </div>
@@ -45,7 +48,7 @@
                 <div class="form-group ">
                     <label class="col-lg-2 control-label" asp-for="End"></label>
                     <div class="col-lg-10">
-                        <input asp-for="End" class="form-control"/>
+                        <input asp-for="End" class="form-control" />
                         <span class="text-danger" asp-validation-for="End"></span>
                     </div>
                 </div>
