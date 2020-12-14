@@ -55,14 +55,16 @@ namespace HealthHerb.Controllers
         }
 
         [HttpGet]
-        public IActionResult OrderHistory()
+        public async Task<IActionResult> OrderHistory()
         {
             var userId = userManager.GetUserId(User);
-            var model = context.Orders
+            var model = await context.Orders
                 .Where(m => m.UserId.Equals(userId))
                 .Include(m => m.OrderProducts)
                 .ThenInclude(m => m.Product)
-                .ThenInclude(m=>m.Images);
+                .ThenInclude(m=>m.Images)
+                .OrderBy(m=>m.CreatedAt)
+                .ToListAsync();
 
             return View(model);
         }

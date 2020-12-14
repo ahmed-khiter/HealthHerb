@@ -91,7 +91,7 @@ namespace HealthHerb.Controllers
             foreach (var item in carts)
             {
                 products.Add(await productCrud.GetById(m => m.Id == item.ProductId));
-                model.TotalPrice += item.TotalPrice*item.Quantity;
+                model.TotalPrice += item.TotalPrice;
                 model.Quantity.Add(item.Quantity);
             }
             
@@ -110,7 +110,7 @@ namespace HealthHerb.Controllers
             PaymentSetting paymentCredential = await context.PaymentManages.FirstOrDefaultAsync();
             PayPal paypal = new PayPal(httpContextAccessor, context, paymentCredential.IsLive);
 
-            ViewData["OrderId"] = await paypal.CreateOrder(model.TotalPrice, "GBP");
+            ViewData["OrderId"] = await paypal.CreateOrder(decimal.Round(model.TotalPrice, 2, MidpointRounding.AwayFromZero), "GBP");
             ViewData["ClientId"] = paymentCredential.ClientId;
             ViewData["ClientToken"] = HttpContext.Request.Cookies["client_token"] ?? await paypal.GenerateClientToken();
             ViewData["Currency"] = "GBP";
@@ -172,7 +172,7 @@ namespace HealthHerb.Controllers
                 prepareModel.ShouldProcess = true;
                 prepareModel.Products = products;
 
-                ViewData["OrderId"] = await paypal.CreateOrder(prepareModel.TotalPrice, "GBP");
+                ViewData["OrderId"] = await paypal.CreateOrder(decimal.Round(prepareModel.TotalPrice, 2, MidpointRounding.AwayFromZero), "GBP");
                 ViewData["ClientId"] = paymentCredential.ClientId;
                 ViewData["ClientToken"] = HttpContext.Request.Cookies["client_token"] ?? await paypal.GenerateClientToken();
                 ViewData["Currency"] = "GBP";
@@ -280,6 +280,10 @@ namespace HealthHerb.Controllers
         private async Task DoneCheckCoupon(PrepareProductViewModel model, string userId)
         {
             var record = await couponCrud.GetById(m => m.Code.Equals(model.DiscountCode));
+            if (record == null)
+            {
+                return;
+            }
             if (record.ManyUsed > 0 && (DateTime.Now > record.Start || DateTime.Now < record.End))
             {
                 var copupon = await couponUsedCrud.GetFirst(m => m.CouponId.Equals(record.Id)

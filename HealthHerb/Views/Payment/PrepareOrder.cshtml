@@ -6,6 +6,7 @@
     var paymentSetting = await paymentSettingCrud.GetById("PaymentSetting");
     int i = 0;
     int quantity = 0;
+    Model.TotalPrice = decimal.Round(Model.TotalPrice, 2, MidpointRounding.AwayFromZero);
 }
 @section Styles {
     <style>
